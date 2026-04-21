@@ -31,4 +31,12 @@ class HomeTest extends TestCase
         Livewire::test('home')
             ->assertSee('Kaffeevollautomaten');
     }
+
+    public function test_home_page_uses_high_contrast_header_navigation_styles()
+    {
+        $this->get(route('home'))
+            ->assertStatus(200)
+            ->assertSee('bg-white/95')
+            ->assertSee('!text-gtc-green');
+    }
 }

@@ -6,7 +6,7 @@
     <body class="min-h-screen bg-gtc-light font-sans text-gtc-ink antialiased">
         @php($navigationCategories = \App\Models\Category::query()->orderBy('name')->get())
 
-        <flux:header container class="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-zinc-200/50">
+        <flux:header container class="sticky top-0 z-50 border-b border-zinc-200/70 bg-white/95 shadow-sm backdrop-blur-md">
             <flux:navbar>
                 <flux:navbar.item href="{{ route('home') }}" class="flex items-center gap-2">
                     <x-app-logo class="size-8" />
@@ -17,15 +17,28 @@
             <flux:spacer />
 
             <flux:navbar class="hidden md:flex">
-                <flux:navbar.item href="{{ route('home') }}" :current="request()->routeIs('home')">{{ __('Home') }}</flux:navbar.item>
+                <flux:navbar.item
+                    href="{{ route('home') }}"
+                    :current="request()->routeIs('home')"
+                    class="font-medium !text-gtc-green transition-colors duration-150 hover:!text-gtc-leaf focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gtc-green/35 active:!text-gtc-green/80"
+                >
+                    {{ __('Home') }}
+                </flux:navbar.item>
                 <flux:dropdown position="bottom" align="start">
-                    <flux:navbar.item icon-trailing="chevron-down" :current="request()->routeIs('category.show')">
+                    <flux:navbar.item
+                        icon-trailing="chevron-down"
+                        :current="request()->routeIs('category.show')"
+                        class="font-medium !text-gtc-green transition-colors duration-150 hover:!text-gtc-leaf focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gtc-green/35 active:!text-gtc-green/80"
+                    >
                         {{ __('Produkte') }}
                     </flux:navbar.item>
 
                     <flux:menu>
                         @foreach ($navigationCategories as $navigationCategory)
-                            <flux:menu.item :href="route('category.show', $navigationCategory->slug)">
+                            <flux:menu.item
+                                :href="route('category.show', $navigationCategory->slug)"
+                                class="font-medium !text-gtc-green transition-colors duration-150 hover:!text-gtc-leaf focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gtc-green/35 active:!text-gtc-green/80"
+                            >
                                 {{ $navigationCategory->name }}
                             </flux:menu.item>
                         @endforeach
@@ -37,9 +50,21 @@
 
             <flux:navbar>
                 @auth
-                    <flux:navbar.item href="{{ route('dashboard') }}" icon="layout-grid">{{ __('Admin') }}</flux:navbar.item>
+                    <flux:navbar.item
+                        href="{{ route('dashboard') }}"
+                        icon="layout-grid"
+                        class="font-medium !text-gtc-green transition-colors duration-150 hover:!text-gtc-leaf focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gtc-green/35 active:!text-gtc-green/80"
+                    >
+                        {{ __('Admin') }}
+                    </flux:navbar.item>
                 @else
-                    <flux:navbar.item href="{{ route('login') }}" icon="user-circle">{{ __('Login') }}</flux:navbar.item>
+                    <flux:navbar.item
+                        href="{{ route('login') }}"
+                        icon="user-circle"
+                        class="font-medium !text-gtc-green transition-colors duration-150 hover:!text-gtc-leaf focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gtc-green/35 active:!text-gtc-green/80"
+                    >
+                        {{ __('Login') }}
+                    </flux:navbar.item>
                 @endauth
             </flux:navbar>
         </flux:header>
@@ -60,8 +85,22 @@
                 </flux:text>
 
                 <div class="flex gap-4">
-                    <flux:link href="#" variant="ghost" size="sm">{{ __('Impressum') }}</flux:link>
-                    <flux:link href="#" variant="ghost" size="sm">{{ __('Datenschutz') }}</flux:link>
+                    <flux:link
+                        href="#"
+                        variant="ghost"
+                        size="sm"
+                        class="text-gtc-green transition-colors duration-150 hover:text-gtc-leaf focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gtc-green/35 active:text-gtc-green/80"
+                    >
+                        {{ __('Impressum') }}
+                    </flux:link>
+                    <flux:link
+                        href="#"
+                        variant="ghost"
+                        size="sm"
+                        class="text-gtc-green transition-colors duration-150 hover:text-gtc-leaf focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gtc-green/35 active:text-gtc-green/80"
+                    >
+                        {{ __('Datenschutz') }}
+                    </flux:link>
                 </div>
             </div>
         </flux:footer>

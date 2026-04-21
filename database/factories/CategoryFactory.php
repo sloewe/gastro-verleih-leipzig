@@ -11,6 +11,14 @@ use Illuminate\Support\Str;
  */
 class CategoryFactory extends Factory
 {
+    /** @var list<string> */
+    private const CATEGORY_NAMES = [
+        'Kuehltechnik',
+        'Buffet und Ausgabe',
+        'Mobiliar',
+        'Eventtechnik',
+    ];
+
     /**
      * Define the model's default state.
      *
@@ -18,12 +26,13 @@ class CategoryFactory extends Factory
      */
     public function definition(): array
     {
-        $name = $this->faker->unique()->word();
+        $name = $this->faker->randomElement(self::CATEGORY_NAMES);
+        $slug = Str::slug($name).'-'.$this->faker->unique()->numberBetween(100, 999);
 
         return [
-            'name' => ucfirst($name),
-            'slug' => Str::slug($name),
-            'image_path' => 'categories/'.$this->faker->word().'.jpg',
+            'name' => $name,
+            'slug' => $slug,
+            'image_path' => 'categories/'.$slug.'.jpg',
         ];
     }
 }
