@@ -39,4 +39,27 @@ class HomeTest extends TestCase
             ->assertSee('bg-white/95')
             ->assertSee('!text-gtc-green');
     }
+
+    public function test_home_page_includes_mobile_navigation_trigger()
+    {
+        $this->get(route('home'))
+            ->assertStatus(200)
+            ->assertSee(__('Menü'))
+            ->assertSee('md:hidden');
+    }
+
+    public function test_home_page_moves_login_link_to_footer(): void
+    {
+        $response = $this->get(route('home'));
+
+        $response
+            ->assertStatus(200)
+            ->assertSeeInOrder([
+                __('Impressum'),
+                __('Datenschutz'),
+                __('Login'),
+            ]);
+
+        $this->assertSame(1, substr_count($response->getContent(), __('Login')));
+    }
 }
