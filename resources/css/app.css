@@ -10,6 +10,8 @@
     --color-gtc-muted: #86868B;
 
     --radius-apple: 18px;
+
+    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
 }
 
 /* BEM Styles */

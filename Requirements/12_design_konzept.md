@@ -1,4 +1,4 @@
-# Design-Konzept: Green Temper Coffee
+# Design-Konzept: Gastro-Verleih Leipzig
 
 Dieses Dokument beschreibt das visuelle Konzept für die Anwendung, basierend auf einem "Apple-Like" Stil und den Farben des Logos.
 
@@ -11,7 +11,7 @@ Der Stil orientiert sich an der Design-Philosophie von Apple: **Minimalismus, Kl
 *   **Hochwertige Typografie:** Klare, serifenlose Schriften mit optimierten Zeilenabständen.
 
 ## 2. Farbpalette
-Basierend auf dem Logo ("Green Temper Coffee") wird eine helle, naturverbundene Farbwelt geschaffen.
+Basierend auf dem Logo ("Gastro-Verleih Leipzig") wird eine helle, naturverbundene Farbwelt geschaffen.
 
 | Farbe | Hex-Code (Vorschlag) | Verwendung |
 | :--- | :--- | :--- |
@@ -43,21 +43,3 @@ Basierend auf dem Logo ("Green Temper Coffee") wird eine helle, naturverbundene 
 *   Freigestellte Produktbilder für die Kategorien-Kacheln (ähnlich wie im Apple Store).
 *   Fokus auf Details und Qualität.
 
-## 5. Umsetzung in Tailwind CSS (Konfiguration)
-Um diesen Stil konsequent umzusetzen, sollten folgende Werte in der `tailwind.config.js` hinterlegt werden:
-
-```javascript
-// Beispiel-Erweiterung
-theme: {
-    extend: {
-        colors: {
-            'gtc-green': '#0B6645',
-            'gtc-light': '#FBFBFD',
-            'gtc-mint': '#E8F5E9',
-        },
-        borderRadius: {
-            'apple': '18px',
-        }
-    }
-}
-```

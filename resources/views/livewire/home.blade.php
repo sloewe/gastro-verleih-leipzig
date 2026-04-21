@@ -11,7 +11,7 @@
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
         @foreach ($categories as $category)
-            <a href="#" class="group relative overflow-hidden rounded-apple bg-white shadow-sm transition-all duration-300 hover:shadow-md hover:scale-[1.02]">
+            <a href="{{ route('category.show', $category->slug) }}" class="group relative overflow-hidden rounded-apple bg-white shadow-sm transition-all duration-300 hover:shadow-md hover:scale-[1.02]">
                 <div class="aspect-[4/3] w-full overflow-hidden">
                     @if ($category->image_path)
                         <img src="{{ Storage::url($category->image_path) }}" alt="{{ $category->name }}" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110">
