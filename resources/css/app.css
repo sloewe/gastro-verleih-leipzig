@@ -1,4 +1,16 @@
+@import "tailwindcss";
 @import '../../vendor/livewire/flux/dist/flux.css';
+
+@theme {
+    --color-gtc-green: #0B6645;
+    --color-gtc-light: #FBFBFD;
+    --color-gtc-mint: #E8F5E9;
+    --color-gtc-leaf: #4CAF50;
+    --color-gtc-ink: #1D1D1F;
+    --color-gtc-muted: #86868B;
+
+    --radius-apple: 18px;
+}
 
 /* BEM Styles */
 
