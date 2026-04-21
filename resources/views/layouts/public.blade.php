@@ -33,11 +33,11 @@
                         {{ __('Produkte') }}
                     </flux:navbar.item>
 
-                    <flux:menu>
+                    <flux:menu class="!bg-white dark:!bg-white !border-zinc-200 dark:!border-zinc-200">
                         @foreach ($navigationCategories as $navigationCategory)
                             <flux:menu.item
                                 :href="route('category.show', $navigationCategory->slug)"
-                                class="font-medium !text-gtc-green transition-colors duration-150 hover:!text-gtc-leaf focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gtc-green/35 active:!text-gtc-green/80"
+                                class="font-medium !text-gtc-green !bg-white dark:!bg-white transition-colors duration-150 hover:!bg-gtc-mint dark:hover:!bg-gtc-mint hover:!text-gtc-leaf focus-visible:!bg-gtc-mint dark:focus-visible:!bg-gtc-mint focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gtc-green/35 active:!bg-gtc-mint dark:active:!bg-gtc-mint active:!text-gtc-green/80"
                             >
                                 {{ $navigationCategory->name }}
                             </flux:menu.item>
