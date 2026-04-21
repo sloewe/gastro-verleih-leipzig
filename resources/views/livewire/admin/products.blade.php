@@ -1,0 +1,165 @@
+
+<div class="space-y-6">
+    <div class="flex items-center justify-between">
+        <div>
+            <flux:heading size="xl" level="1">{{ __('Produkte') }}</flux:heading>
+            <flux:subheading>{{ __('Verwalten Sie Ihre Produkte und deren Details.') }}</flux:subheading>
+        </div>
+
+        <flux:button wire:click="create" variant="primary" icon="plus">{{ __('Neues Produkt') }}</flux:button>
+    </div>
+
+    <div class="flex items-center space-x-4">
+        <flux:input wire:model.live.debounce.300ms="search" placeholder="{{ __('Suche...') }}" icon="magnifying-glass" clearable />
+
+        <flux:select wire:model.live="categoryFilter" placeholder="{{ __('Kategorie filtern') }}" clearable>
+            @foreach($this->categories() as $category)
+                <flux:select.option :value="$category->id">{{ $category->name }}</flux:select.option>
+            @endforeach
+        </flux:select>
+    </div>
+
+    <flux:table :paginate="$products">
+        <flux:table.columns>
+            <flux:table.column>{{ __('Bild') }}</flux:table.column>
+            <flux:table.column sortable wire:click="sortBy('name')">{{ __('Name') }}</flux:table.column>
+            <flux:table.column>{{ __('Kategorie') }}</flux:table.column>
+            <flux:table.column>{{ __('Preis') }}</flux:table.column>
+            <flux:table.column>{{ __('Erstellt am') }}</flux:table.column>
+            <flux:table.column></flux:table.column>
+        </flux:table.columns>
+
+        <flux:table.rows>
+            @foreach ($products as $product)
+                <flux:table.row :key="$product->id">
+                    <flux:table.cell>
+                        @if ($product->image_path)
+                            <img src="{{ Storage::url($product->image_path) }}" alt="{{ $product->name }}" class="h-10 w-10 rounded-lg object-cover">
+                        @else
+                            <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-zinc-100 dark:bg-zinc-800">
+                                <flux:icon name="photo" class="text-zinc-400" />
+                            </div>
+                        @endif
+                    </flux:table.cell>
+                    <flux:table.cell class="font-medium">
+                        {{ $product->name }}
+                        <div class="text-xs text-zinc-500">{{ $product->slug }}</div>
+                    </flux:table.cell>
+                    <flux:table.cell>
+                        <flux:badge size="sm" inset="top bottom">{{ $product->category->name }}</flux:badge>
+                    </flux:table.cell>
+                    <flux:table.cell>{{ number_format($product->price, 2, ',', '.') }} €</flux:table.cell>
+                    <flux:table.cell>{{ $product->created_at->format('d.m.Y') }}</flux:table.cell>
+                    <flux:table.cell class="flex justify-end space-x-2">
+                        <flux:button wire:click="edit({{ $product->id }})" variant="ghost" size="sm" icon="pencil-square" />
+                        <flux:button wire:click="delete({{ $product->id }})" variant="ghost" size="sm" icon="trash" class="text-red-500 hover:text-red-600" />
+                    </flux:table.cell>
+                </flux:table.row>
+            @endforeach
+        </flux:table.rows>
+    </flux:table>
+
+    <flux:modal name="product-modal" class="min-w-[32rem]">
+        <form wire:submit="save" class="space-y-6">
+            <div>
+                <flux:heading size="lg">{{ $editing ? __('Produkt bearbeiten') : __('Neues Produkt') }}</flux:heading>
+                <flux:subheading>{{ __('Geben Sie die Details des Produkts ein.') }}</flux:subheading>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <flux:field class="col-span-2">
+                    <flux:label>{{ __('Kategorie') }}</flux:label>
+                    <flux:select wire:model="category_id" placeholder="{{ __('Kategorie wählen') }}">
+                        @foreach($this->categories() as $category)
+                            <flux:select.option :value="$category->id">{{ $category->name }}</flux:select.option>
+                        @endforeach
+                    </flux:select>
+                    <flux:error name="category_id" />
+                </flux:field>
+
+                <flux:field class="col-span-2">
+                    <flux:label>{{ __('Name') }}</flux:label>
+                    <flux:input wire:model.live="name" />
+                    <flux:error name="name" />
+                </flux:field>
+
+                <flux:field class="col-span-2">
+                    <flux:label>{{ __('Slug') }}</flux:label>
+                    <flux:input wire:model="slug" />
+                    <flux:error name="slug" />
+                </flux:field>
+
+                <flux:field class="col-span-2">
+                    <flux:label>{{ __('Beschreibung') }}</flux:label>
+                    <flux:textarea wire:model="description" rows="3" />
+                    <flux:error name="description" />
+                </flux:field>
+
+                <flux:field class="col-span-2">
+                    <flux:label>{{ __('Keywords (kommagetrennt)') }}</flux:label>
+                    <flux:input wire:model="keywords" placeholder="Deko, Verleih, Hochzeit" />
+                    <flux:error name="keywords" />
+                </flux:field>
+
+                <flux:field>
+                    <flux:label>{{ __('Preis (€)') }}</flux:label>
+                    <flux:input type="number" step="0.01" wire:model="price" />
+                    <flux:error name="price" />
+                </flux:field>
+
+                <flux:field class="col-span-2">
+                    <flux:label>{{ __('Bild') }}</flux:label>
+                    <flux:input type="file" wire:model="image" />
+                    <flux:error name="image" />
+
+                    @if ($image)
+                        <div class="mt-2">
+                            <img src="{{ $image->temporaryUrl() }}" class="h-32 w-32 rounded-lg object-cover">
+                        </div>
+                    @elseif ($editing && $product?->image_path)
+                        <div class="mt-2">
+                            <img src="{{ Storage::url($product->image_path) }}" class="h-32 w-32 rounded-lg object-cover">
+                        </div>
+                    @endif
+                </flux:field>
+
+                <flux:separator class="col-span-2" text="{{ __('Optionale Merkmale') }}" />
+
+                <flux:field>
+                    <flux:label>{{ __('Merkmal Name') }}</flux:label>
+                    <flux:input wire:model="feature_name" placeholder="z.B. Farbe" />
+                    <flux:error name="feature_name" />
+                </flux:field>
+
+                <flux:field>
+                    <flux:label>{{ __('Werte (kommagetrennt)') }}</flux:label>
+                    <flux:input wire:model="feature_values" placeholder="Schwarz, Weiß, Silber" />
+                    <flux:error name="feature_values" />
+                </flux:field>
+            </div>
+
+            <div class="flex justify-end space-x-2">
+                <flux:modal.close>
+                    <flux:button variant="ghost">{{ __('Abbrechen') }}</flux:button>
+                </flux:modal.close>
+                <flux:button type="submit" variant="primary">{{ __('Speichern') }}</flux:button>
+            </div>
+        </form>
+    </flux:modal>
+
+    <flux:modal name="delete-confirmation" class="min-w-[24rem]">
+        <div class="space-y-6">
+            <div>
+                <flux:heading size="lg">{{ __('Produkt löschen') }}</flux:heading>
+                <flux:subheading>{{ __('Sind Sie sicher, dass Sie dieses Produkt löschen möchten?') }}</flux:subheading>
+            </div>
+
+            <div class="flex justify-end space-x-2">
+                <flux:modal.close>
+                    <flux:button variant="ghost">{{ __('Abbrechen') }}</flux:button>
+                </flux:modal.close>
+                <flux:button wire:click="confirmDelete" variant="danger">{{ __('Löschen') }}</flux:button>
+            </div>
+        </div>
+    </flux:modal>
+</div>
