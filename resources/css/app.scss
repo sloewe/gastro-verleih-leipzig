@@ -1,6 +1,10 @@
 @import "tailwindcss";
 @import '../../vendor/livewire/flux/dist/flux.css';
 
+@import "components/public-layout";
+@import "components/public-header";
+@import "components/public-footer";
+
 @theme {
     --color-gtc-green: #0B6645;
     --color-gtc-light: #FBFBFD;
@@ -12,17 +16,6 @@
     --radius-apple: 18px;
 
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
-}
-
-/* BEM Styles */
-
-.page {
-}
-
-.header {
-}
-
-.footer {
 }
 
 .btn-primary-inquiry {

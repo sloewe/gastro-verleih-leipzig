@@ -1,0 +1,9 @@
+@layer components {
+    .public-page {
+        @apply min-h-screen bg-gtc-light font-sans text-gtc-ink antialiased;
+    }
+
+    .public-main {
+        @apply py-12;
+    }
+}

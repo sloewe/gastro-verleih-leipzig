@@ -1,0 +1,25 @@
+@layer components {
+    .public-footer {
+        @apply mt-20 border-t border-zinc-200 bg-white py-12;
+    }
+
+    .public-footer__content {
+        @apply flex flex-col items-center justify-between gap-6 md:flex-row;
+    }
+
+    .public-footer__brand {
+        @apply flex items-center gap-2;
+    }
+
+    .public-footer__brand-title {
+        @apply font-semibold tracking-tight text-gtc-green;
+    }
+
+    .public-footer__links {
+        @apply flex gap-4;
+    }
+
+    .public-footer__link {
+        @apply text-gtc-green transition-colors duration-150 hover:text-gtc-leaf focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gtc-green/35 active:text-gtc-green/80;
+    }
+}

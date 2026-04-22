@@ -1,0 +1,41 @@
+@layer components {
+    .public-header {
+        @apply sticky top-0 z-50 border-b border-zinc-200/70 bg-white/95 shadow-sm backdrop-blur-md;
+    }
+
+    .public-header__brand-link {
+        @apply flex items-center gap-2;
+    }
+
+    .public-header__brand-title {
+        @apply text-lg font-semibold text-gtc-green;
+    }
+
+    .public-header__desktop-nav {
+        @apply hidden md:flex;
+    }
+
+    .public-header__mobile-nav {
+        @apply md:hidden;
+    }
+
+    .public-header__nav-item {
+        @apply font-medium text-gtc-green transition-colors duration-150 hover:text-gtc-leaf focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gtc-green/35 active:text-gtc-green/80;
+    }
+
+    .public-header__menu {
+        @apply border-zinc-200 bg-white dark:border-zinc-200 dark:bg-white;
+    }
+
+    .public-header__menu-item {
+        @apply font-medium bg-white text-gtc-green transition-colors duration-150 hover:bg-gtc-mint hover:text-gtc-leaf focus-visible:bg-gtc-mint focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gtc-green/35 active:bg-gtc-mint active:text-gtc-green/80 dark:bg-white dark:hover:bg-gtc-mint dark:focus-visible:bg-gtc-mint dark:active:bg-gtc-mint;
+    }
+
+    .public-header__inquiry-label {
+        @apply relative inline-flex items-center pr-4;
+    }
+
+    .public-header__inquiry-badge {
+        @apply absolute -right-1 -top-2 inline-flex min-h-5 min-w-5 items-center justify-center rounded-full bg-gtc-green px-1.5 text-xs font-semibold leading-none text-white;
+    }
+}

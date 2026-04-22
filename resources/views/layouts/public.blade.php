@@ -3,25 +3,25 @@
     <head>
         @include('partials.head')
     </head>
-    <body class="min-h-screen bg-gtc-light font-sans text-gtc-ink antialiased">
+    <body class="public-page">
         @php($navigationCategories = \App\Models\Category::query()->orderBy('name')->get())
         @php($inquiryListCount = collect(session('inquiry_list.items', []))->sum(fn (array $item): int => max(1, (int) ($item['quantity'] ?? 1))))
 
-        <flux:header container class="sticky top-0 z-50 border-b border-zinc-200/70 bg-white/95 shadow-sm backdrop-blur-md">
+        <flux:header container class="public-header">
             <flux:navbar>
-                <flux:navbar.item href="{{ route('home') }}" class="flex items-center gap-2">
+                <flux:navbar.item href="{{ route('home') }}" class="public-header__brand-link">
                     <x-app-logo class="size-8" />
-                    <span class="text-lg font-semibold text-gtc-green">Gastro-Verleih Leipzig</span>
+                    <span class="public-header__brand-title">Gastro-Verleih Leipzig</span>
                 </flux:navbar.item>
             </flux:navbar>
 
             <flux:spacer />
 
-            <flux:navbar class="hidden md:flex">
+            <flux:navbar class="public-header__desktop-nav">
                 <flux:navbar.item
                     href="{{ route('home') }}"
                     :current="request()->routeIs('home')"
-                    class="font-medium !text-gtc-green transition-colors duration-150 hover:!text-gtc-leaf focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gtc-green/35 active:!text-gtc-green/80"
+                    class="public-header__nav-item"
                 >
                     {{ __('Home') }}
                 </flux:navbar.item>
@@ -29,16 +29,16 @@
                     <flux:navbar.item
                         icon-trailing="chevron-down"
                         :current="request()->routeIs('category.show')"
-                        class="font-medium !text-gtc-green transition-colors duration-150 hover:!text-gtc-leaf focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gtc-green/35 active:!text-gtc-green/80"
+                        class="public-header__nav-item"
                     >
                         {{ __('Produkte') }}
                     </flux:navbar.item>
 
-                    <flux:menu class="!bg-white dark:!bg-white !border-zinc-200 dark:!border-zinc-200">
+                    <flux:menu class="public-header__menu">
                         @foreach ($navigationCategories as $navigationCategory)
                             <flux:menu.item
                                 :href="route('category.show', $navigationCategory->slug)"
-                                class="font-medium !text-gtc-green !bg-white dark:!bg-white transition-colors duration-150 hover:!bg-gtc-mint dark:hover:!bg-gtc-mint hover:!text-gtc-leaf focus-visible:!bg-gtc-mint dark:focus-visible:!bg-gtc-mint focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gtc-green/35 active:!bg-gtc-mint dark:active:!bg-gtc-mint active:!text-gtc-green/80"
+                                class="public-header__menu-item"
                             >
                                 {{ $navigationCategory->name }}
                             </flux:menu.item>
@@ -48,16 +48,16 @@
                 <flux:navbar.item
                     href="{{ route('inquiry.list') }}"
                     :current="request()->routeIs('inquiry.list')"
-                    class="font-medium !text-gtc-green transition-colors duration-150 hover:!text-gtc-leaf focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gtc-green/35 active:!text-gtc-green/80"
+                    class="public-header__nav-item"
                 >
-                    <span class="relative inline-flex items-center pr-4">
+                    <span class="public-header__inquiry-label">
                         {{ __('Anfrageliste') }}
 
                         @if ($inquiryListCount > 0)
                             <span
                                 data-inquiry-count-badge
                                 data-inquiry-count="{{ $inquiryListCount }}"
-                                class="absolute -right-1 -top-2 inline-flex min-h-5 min-w-5 items-center justify-center rounded-full bg-gtc-green px-1.5 text-xs font-semibold leading-none text-white"
+                                class="public-header__inquiry-badge"
                             >
                                 {{ $inquiryListCount }}
                             </span>
@@ -66,25 +66,25 @@
                 </flux:navbar.item>
             </flux:navbar>
 
-            <flux:navbar class="md:hidden">
+            <flux:navbar class="public-header__mobile-nav">
                 <flux:dropdown position="bottom" align="end">
                     <flux:navbar.item
                         icon-trailing="chevron-down"
-                        class="font-medium !text-gtc-green transition-colors duration-150 hover:!text-gtc-leaf focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gtc-green/35 active:!text-gtc-green/80"
+                        class="public-header__nav-item"
                     >
                         {{ __('Menü') }}
                     </flux:navbar.item>
 
-                    <flux:menu class="!bg-white dark:!bg-white !border-zinc-200 dark:!border-zinc-200">
+                    <flux:menu class="public-header__menu">
                         <flux:menu.item
                             :href="route('home')"
-                            class="font-medium !text-gtc-green !bg-white dark:!bg-white transition-colors duration-150 hover:!bg-gtc-mint dark:hover:!bg-gtc-mint hover:!text-gtc-leaf focus-visible:!bg-gtc-mint dark:focus-visible:!bg-gtc-mint focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gtc-green/35 active:!bg-gtc-mint dark:active:!bg-gtc-mint active:!text-gtc-green/80"
+                            class="public-header__menu-item"
                         >
                             {{ __('Home') }}
                         </flux:menu.item>
                         <flux:menu.item
                             :href="route('inquiry.list')"
-                            class="font-medium !text-gtc-green !bg-white dark:!bg-white transition-colors duration-150 hover:!bg-gtc-mint dark:hover:!bg-gtc-mint hover:!text-gtc-leaf focus-visible:!bg-gtc-mint dark:focus-visible:!bg-gtc-mint focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gtc-green/35 active:!bg-gtc-mint dark:active:!bg-gtc-mint active:!text-gtc-green/80"
+                            class="public-header__menu-item"
                         >
                             {{ __('Anfrageliste') }}
                         </flux:menu.item>
@@ -92,7 +92,7 @@
                         @foreach ($navigationCategories as $navigationCategory)
                             <flux:menu.item
                                 :href="route('category.show', $navigationCategory->slug)"
-                                class="font-medium !text-gtc-green !bg-white dark:!bg-white transition-colors duration-150 hover:!bg-gtc-mint dark:hover:!bg-gtc-mint hover:!text-gtc-leaf focus-visible:!bg-gtc-mint dark:focus-visible:!bg-gtc-mint focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gtc-green/35 active:!bg-gtc-mint dark:active:!bg-gtc-mint active:!text-gtc-green/80"
+                                class="public-header__menu-item"
                             >
                                 {{ $navigationCategory->name }}
                             </flux:menu.item>
@@ -104,27 +104,27 @@
 
         </flux:header>
 
-        <flux:main container class="py-12">
+        <flux:main container class="public-main">
             {{ $slot }}
         </flux:main>
 
-        <flux:footer container class="bg-white border-t border-zinc-200 mt-20 py-12">
-            <div class="flex flex-col md:flex-row justify-between items-center gap-6">
-                <div class="flex items-center gap-2">
+        <flux:footer container class="public-footer">
+            <div class="public-footer__content">
+                <div class="public-footer__brand">
                     <x-app-logo class="size-6" />
-                    <span class="font-semibold text-gtc-green tracking-tight">Gastro-Verleih Leipzig</span>
+                    <span class="public-footer__brand-title">Gastro-Verleih Leipzig</span>
                 </div>
 
                 <flux:text variant="subtle" size="sm">
                     &copy; {{ date('Y') }} Gastro-Verleih Leipzig. {{ __('Alle Rechte vorbehalten.') }}
                 </flux:text>
 
-                <div class="flex gap-4">
+                <div class="public-footer__links">
                     <flux:link
                         href="#"
                         variant="ghost"
                         size="sm"
-                        class="text-gtc-green transition-colors duration-150 hover:text-gtc-leaf focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gtc-green/35 active:text-gtc-green/80"
+                        class="public-footer__link"
                     >
                         {{ __('Impressum') }}
                     </flux:link>
@@ -132,7 +132,7 @@
                         href="#"
                         variant="ghost"
                         size="sm"
-                        class="text-gtc-green transition-colors duration-150 hover:text-gtc-leaf focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gtc-green/35 active:text-gtc-green/80"
+                        class="public-footer__link"
                     >
                         {{ __('Datenschutz') }}
                     </flux:link>
@@ -141,7 +141,7 @@
                             :href="route('dashboard')"
                             variant="ghost"
                             size="sm"
-                            class="text-gtc-green transition-colors duration-150 hover:text-gtc-leaf focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gtc-green/35 active:text-gtc-green/80"
+                            class="public-footer__link"
                         >
                             {{ __('Admin') }}
                         </flux:link>
@@ -150,7 +150,7 @@
                             :href="route('login')"
                             variant="ghost"
                             size="sm"
-                            class="text-gtc-green transition-colors duration-150 hover:text-gtc-leaf focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gtc-green/35 active:text-gtc-green/80"
+                            class="public-footer__link"
                         >
                             {{ __('Login') }}
                         </flux:link>
