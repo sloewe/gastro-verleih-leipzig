@@ -1,9 +1,9 @@
-@import "tailwindcss";
-@import '../../vendor/livewire/flux/dist/flux.css';
+@use "tailwindcss";
+@use "components/public-layout";
+@use "components/public-header";
+@use "components/public-footer";
 
-@import "components/public-layout";
-@import "components/public-header";
-@import "components/public-footer";
+@import '../../vendor/livewire/flux/dist/flux.css';
 
 @theme {
     --color-gtc-green: #0B6645;
