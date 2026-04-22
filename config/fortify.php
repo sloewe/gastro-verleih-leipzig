@@ -144,7 +144,9 @@ return [
     */
 
     'features' => [
-        Features::registration(),
+        config('features.registration_enabled')
+            ? Features::registration()
+            : null,
         Features::resetPasswords(),
         Features::emailVerification(),
         Features::twoFactorAuthentication([
