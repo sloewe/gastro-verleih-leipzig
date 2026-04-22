@@ -5,6 +5,7 @@
     </head>
     <body class="min-h-screen bg-gtc-light font-sans text-gtc-ink antialiased">
         @php($navigationCategories = \App\Models\Category::query()->orderBy('name')->get())
+        @php($inquiryListCount = collect(session('inquiry_list.items', []))->sum(fn (array $item): int => max(1, (int) ($item['quantity'] ?? 1))))
 
         <flux:header container class="sticky top-0 z-50 border-b border-zinc-200/70 bg-white/95 shadow-sm backdrop-blur-md">
             <flux:navbar>
@@ -23,13 +24,6 @@
                     class="font-medium !text-gtc-green transition-colors duration-150 hover:!text-gtc-leaf focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gtc-green/35 active:!text-gtc-green/80"
                 >
                     {{ __('Home') }}
-                </flux:navbar.item>
-                <flux:navbar.item
-                    href="{{ route('inquiry.list') }}"
-                    :current="request()->routeIs('inquiry.list')"
-                    class="font-medium !text-gtc-green transition-colors duration-150 hover:!text-gtc-leaf focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gtc-green/35 active:!text-gtc-green/80"
-                >
-                    {{ __('Anfrageliste') }}
                 </flux:navbar.item>
                 <flux:dropdown position="bottom" align="start">
                     <flux:navbar.item
@@ -51,6 +45,25 @@
                         @endforeach
                     </flux:menu>
                 </flux:dropdown>
+                <flux:navbar.item
+                    href="{{ route('inquiry.list') }}"
+                    :current="request()->routeIs('inquiry.list')"
+                    class="font-medium !text-gtc-green transition-colors duration-150 hover:!text-gtc-leaf focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gtc-green/35 active:!text-gtc-green/80"
+                >
+                    <span class="relative inline-flex items-center pr-4">
+                        {{ __('Anfrageliste') }}
+
+                        @if ($inquiryListCount > 0)
+                            <span
+                                data-inquiry-count-badge
+                                data-inquiry-count="{{ $inquiryListCount }}"
+                                class="absolute -right-1 -top-2 inline-flex min-h-5 min-w-5 items-center justify-center rounded-full bg-gtc-green px-1.5 text-xs font-semibold leading-none text-white"
+                            >
+                                {{ $inquiryListCount }}
+                            </span>
+                        @endif
+                    </span>
+                </flux:navbar.item>
             </flux:navbar>
 
             <flux:navbar class="md:hidden">

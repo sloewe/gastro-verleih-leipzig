@@ -63,7 +63,7 @@
                     </div>
                 @endif
 
-                <flux:button variant="primary" wire:click="addToInquiryList">{{ __('Zur Anfrage hinzufügen') }}</flux:button>
+                <flux:button wire:click="addToInquiryList" class="btn-primary-inquiry">{{ __('Zur Anfrage hinzufügen') }}</flux:button>
             </div>
         </div>
 

@@ -178,4 +178,41 @@ class InquiryListTest extends TestCase
             ->assertSee('26,00 €')
             ->assertSee('226,00 €');
     }
+
+    public function test_header_shows_inquiry_list_badge_with_total_item_quantity(): void
+    {
+        $firstProduct = Product::factory()->create();
+        $secondProduct = Product::factory()->create();
+
+        $response = $this->withSession([
+            'inquiry_list.items' => [
+                [
+                    'key' => $firstProduct->id.'|',
+                    'product_id' => $firstProduct->id,
+                    'feature_value' => '',
+                    'quantity' => 2,
+                ],
+                [
+                    'key' => $secondProduct->id.'|',
+                    'product_id' => $secondProduct->id,
+                    'feature_value' => '',
+                    'quantity' => 3,
+                ],
+            ],
+        ])->get(route('home'));
+
+        $response
+            ->assertOk()
+            ->assertSee('data-inquiry-count-badge', false)
+            ->assertSee('data-inquiry-count="5"', false);
+    }
+
+    public function test_header_hides_inquiry_list_badge_when_inquiry_list_is_empty(): void
+    {
+        $response = $this->get(route('home'));
+
+        $response
+            ->assertOk()
+            ->assertDontSee('data-inquiry-count-badge', false);
+    }
 }

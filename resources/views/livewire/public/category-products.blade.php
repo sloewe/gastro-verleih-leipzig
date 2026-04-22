@@ -60,7 +60,7 @@
                                 </flux:field>
                             @endif
 
-                            <flux:button variant="primary" wire:click="addToInquiryList({{ $product->id }})">
+                            <flux:button wire:click="addToInquiryList({{ $product->id }})" class="btn-primary-inquiry">
                                 {{ __('Zur Anfrage hinzufügen') }}
                             </flux:button>
                         </div>
