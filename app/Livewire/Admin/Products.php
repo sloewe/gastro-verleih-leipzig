@@ -35,6 +35,8 @@ class Products extends Component
 
     public $price = '';
 
+    public $vat_rate = '19';
+
     public $image = null;
 
     public $feature_name = '';
@@ -52,7 +54,8 @@ class Products extends Component
 
     public function create()
     {
-        $this->reset(['category_id', 'name', 'slug', 'description', 'keywords', 'price', 'image', 'feature_name', 'feature_values', 'editing', 'product']);
+        $this->reset(['category_id', 'name', 'slug', 'description', 'keywords', 'price', 'vat_rate', 'image', 'feature_name', 'feature_values', 'editing', 'product']);
+        $this->vat_rate = '19';
         $this->slug = '';
         $this->dispatch('modal-show', name: 'product-modal');
     }
@@ -66,6 +69,7 @@ class Products extends Component
         $this->description = $product->description;
         $this->keywords = is_array($product->keywords) ? implode(', ', $product->keywords) : $product->keywords;
         $this->price = $product->price;
+        $this->vat_rate = (string) $product->vat_rate;
         $this->feature_name = $product->feature_name;
         $this->feature_values = is_array($product->feature_values) ? implode(', ', $product->feature_values) : $product->feature_values;
 
@@ -83,6 +87,7 @@ class Products extends Component
             'description' => 'nullable',
             'keywords' => 'nullable',
             'price' => 'required|numeric|min:0',
+            'vat_rate' => 'required|numeric|min:0|max:99.99',
             'image' => 'nullable|image|max:2048',
             'feature_name' => 'nullable|max:255',
             'feature_values' => 'nullable',
@@ -100,6 +105,7 @@ class Products extends Component
             'description' => $this->description,
             'keywords' => $keywordsArray,
             'price' => $this->price,
+            'vat_rate' => $this->vat_rate,
             'feature_name' => $this->feature_name,
             'feature_values' => $featureValuesArray,
         ];
@@ -120,7 +126,8 @@ class Products extends Component
         }
 
         $this->dispatch('modal-close', name: 'product-modal');
-        $this->reset(['category_id', 'name', 'slug', 'description', 'keywords', 'price', 'image', 'feature_name', 'feature_values', 'editing', 'product']);
+        $this->reset(['category_id', 'name', 'slug', 'description', 'keywords', 'price', 'vat_rate', 'image', 'feature_name', 'feature_values', 'editing', 'product']);
+        $this->vat_rate = '19';
     }
 
     public function delete(Product $product)

@@ -5,12 +5,14 @@ use App\Livewire\Admin\Products;
 use App\Livewire\Admin\Users;
 use App\Livewire\Home;
 use App\Livewire\Public\CategoryProducts;
+use App\Livewire\Public\InquiryList;
 use App\Livewire\Public\ProductDetails;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', Home::class)->name('home');
 Route::get('/kategorie/{slug}', CategoryProducts::class)->name('category.show');
 Route::get('/produkt/{slug}', ProductDetails::class)->name('product.show');
+Route::get('/anfrageliste', InquiryList::class)->name('inquiry.list');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::view('dashboard', 'dashboard')->name('dashboard');

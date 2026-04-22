@@ -21,6 +21,7 @@ class Product extends Model
         'keywords',
         'image_path',
         'price',
+        'vat_rate',
         'feature_name',
         'feature_values',
     ];
@@ -29,6 +30,7 @@ class Product extends Model
         'keywords' => 'array',
         'feature_values' => 'array',
         'price' => 'decimal:2',
+        'vat_rate' => 'decimal:2',
     ];
 
     /**

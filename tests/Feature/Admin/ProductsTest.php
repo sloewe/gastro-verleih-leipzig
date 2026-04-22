@@ -38,6 +38,7 @@ class ProductsTest extends TestCase
             ->set('category_id', $category->id)
             ->set('name', 'Test Produkt')
             ->set('price', 19.99)
+            ->set('vat_rate', 7.00)
             ->set('description', 'Beschreibung')
             ->set('keywords', 'key1, key2')
             ->set('image', $image)
@@ -48,6 +49,7 @@ class ProductsTest extends TestCase
         $this->assertDatabaseHas('products', [
             'name' => 'Test Produkt',
             'price' => 19.99,
+            'vat_rate' => 7.00,
             'category_id' => $category->id,
             'feature_name' => 'Farbe',
         ]);

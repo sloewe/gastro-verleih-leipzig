@@ -51,6 +51,7 @@ class ProductFactory extends Factory
             'keywords' => ['gastro', 'vermietung', 'event', 'technik', 'service'],
             'image_path' => 'products/'.$this->faker->word().'.jpg',
             'price' => $this->faker->randomFloat(2, 5, 500),
+            'vat_rate' => 19.00,
             'feature_name' => $hasLengthFeature ? 'Laenge' : null,
             'feature_values' => $hasLengthFeature ? self::LENGTH_OPTIONS : null,
         ];

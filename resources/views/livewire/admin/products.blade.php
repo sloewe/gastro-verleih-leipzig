@@ -107,6 +107,12 @@
                     <flux:error name="price" />
                 </flux:field>
 
+                <flux:field>
+                    <flux:label>{{ __('MwSt. (%)') }}</flux:label>
+                    <flux:input type="number" step="0.01" min="0" max="99.99" wire:model="vat_rate" />
+                    <flux:error name="vat_rate" />
+                </flux:field>
+
                 <flux:field class="col-span-2">
                     <flux:label>{{ __('Bild') }}</flux:label>
                     <flux:input type="file" wire:model="image" />

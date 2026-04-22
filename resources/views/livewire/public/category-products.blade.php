@@ -44,8 +44,23 @@
                             <flux:text class="text-lg font-semibold text-gtc-green">
                                 {{ number_format((float) $product->price, 2, ',', '.') }} €
                             </flux:text>
+                            <flux:text class="text-xs text-gtc-muted">
+                                {{ __('zzgl. MwSt. (:rate%)', ['rate' => number_format((float) ($product->vat_rate ?? 19), 2, ',', '.')]) }}
+                            </flux:text>
 
-                            <flux:button variant="primary">
+                            @if ($product->feature_name && ! empty($product->feature_values))
+                                <flux:field>
+                                    <flux:label>{{ $product->feature_name }}</flux:label>
+                                    <flux:select wire:model.live="selectedFeatureValues.{{ $product->id }}">
+                                        <flux:select.option value="">{{ __('Bitte auswählen') }}</flux:select.option>
+                                        @foreach ($product->feature_values as $featureValue)
+                                            <flux:select.option value="{{ $featureValue }}">{{ $featureValue }}</flux:select.option>
+                                        @endforeach
+                                    </flux:select>
+                                </flux:field>
+                            @endif
+
+                            <flux:button variant="primary" wire:click="addToInquiryList({{ $product->id }})">
                                 {{ __('Zur Anfrage hinzufügen') }}
                             </flux:button>
                         </div>

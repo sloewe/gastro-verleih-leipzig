@@ -24,6 +24,13 @@
                 >
                     {{ __('Home') }}
                 </flux:navbar.item>
+                <flux:navbar.item
+                    href="{{ route('inquiry.list') }}"
+                    :current="request()->routeIs('inquiry.list')"
+                    class="font-medium !text-gtc-green transition-colors duration-150 hover:!text-gtc-leaf focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gtc-green/35 active:!text-gtc-green/80"
+                >
+                    {{ __('Anfrageliste') }}
+                </flux:navbar.item>
                 <flux:dropdown position="bottom" align="start">
                     <flux:navbar.item
                         icon-trailing="chevron-down"
@@ -61,6 +68,12 @@
                             class="font-medium !text-gtc-green !bg-white dark:!bg-white transition-colors duration-150 hover:!bg-gtc-mint dark:hover:!bg-gtc-mint hover:!text-gtc-leaf focus-visible:!bg-gtc-mint dark:focus-visible:!bg-gtc-mint focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gtc-green/35 active:!bg-gtc-mint dark:active:!bg-gtc-mint active:!text-gtc-green/80"
                         >
                             {{ __('Home') }}
+                        </flux:menu.item>
+                        <flux:menu.item
+                            :href="route('inquiry.list')"
+                            class="font-medium !text-gtc-green !bg-white dark:!bg-white transition-colors duration-150 hover:!bg-gtc-mint dark:hover:!bg-gtc-mint hover:!text-gtc-leaf focus-visible:!bg-gtc-mint dark:focus-visible:!bg-gtc-mint focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gtc-green/35 active:!bg-gtc-mint dark:active:!bg-gtc-mint active:!text-gtc-green/80"
+                        >
+                            {{ __('Anfrageliste') }}
                         </flux:menu.item>
 
                         @foreach ($navigationCategories as $navigationCategory)
