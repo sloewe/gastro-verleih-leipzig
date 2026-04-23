@@ -2,10 +2,7 @@
     <x-slot:title>{{ $page->meta_title ?: $page->title }}</x-slot:title>
 
     <section class="space-y-2">
-        <flux:subheading size="sm" class="uppercase tracking-wider text-gtc-muted">
-            {{ __('Information') }}
-        </flux:subheading>
-        <flux:heading size="2xl" level="1" class="tracking-tight text-gtc-green font-bold">
+        <flux:heading size="xl" level="1" class="tracking-tight text-gtc-green font-bold">
             {{ $page->title }}
         </flux:heading>
     </section>
