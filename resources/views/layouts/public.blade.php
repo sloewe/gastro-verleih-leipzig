@@ -114,10 +114,10 @@
         </p>
 
         <div class="public-footer__links">
-            <a href="#" class="public-footer__link">
+            <a href="{{ route('content.page', 'impressum') }}" class="public-footer__link">
                 {{ __('Impressum') }}
             </a>
-            <a href="#" class="public-footer__link">
+            <a href="{{ route('content.page', 'datenschutz') }}" class="public-footer__link">
                 {{ __('Datenschutz') }}
             </a>
             @auth
