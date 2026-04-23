@@ -1,9 +1,9 @@
 @layer components {
     .public-page {
-        @apply min-h-screen bg-gtc-light font-sans text-gtc-ink antialiased;
+        @apply grid min-h-screen grid-rows-[auto_1fr_auto] bg-gtc-light font-sans text-gtc-ink antialiased;
     }
 
     .public-main {
-        @apply py-12;
+        @apply h-full py-12;
     }
 }

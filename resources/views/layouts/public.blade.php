@@ -101,11 +101,11 @@
     </div>
 </header>
 
-<div>
-    <flux:container class="public-main">
+<main class="public-main">
+    <flux:container>
         {{ $slot }}
     </flux:container>
-</div>
+</main>
 
 <footer class="public-footer">
     <div class="container public-footer__content">
