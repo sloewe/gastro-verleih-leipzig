@@ -62,4 +62,12 @@ class HomeTest extends TestCase
 
         $this->assertSame(1, substr_count($response->getContent(), __('Login')));
     }
+
+    public function test_home_page_products_dropdown_includes_outside_click_close_behavior(): void
+    {
+        $this->get(route('home'))
+            ->assertStatus(200)
+            ->assertSee('data-public-products-dropdown', false)
+            ->assertSee('productsDropdown.open = false;', false);
+    }
 }

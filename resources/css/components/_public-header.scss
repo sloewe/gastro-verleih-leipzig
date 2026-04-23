@@ -3,6 +3,10 @@
         @apply sticky top-0 z-50 border-b border-zinc-200/70 bg-white/95 shadow-sm backdrop-blur-md;
     }
 
+    .public-header__container {
+        @apply flex min-h-16 items-center gap-3;
+    }
+
     .public-header__brand-link {
         @apply flex items-center gap-2;
     }
@@ -12,23 +16,55 @@
     }
 
     .public-header__desktop-nav {
-        @apply hidden md:flex;
+        @apply ml-auto hidden items-center gap-1 md:flex;
     }
 
     .public-header__mobile-nav {
-        @apply md:hidden;
+        @apply ml-auto md:hidden;
     }
 
     .public-header__nav-item {
-        @apply font-medium text-gtc-green transition-colors duration-150 hover:text-gtc-leaf focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gtc-green/35 active:text-gtc-green/80;
+        @apply inline-flex cursor-pointer items-center gap-1 rounded-md px-3 py-2 font-medium text-gtc-green transition-colors duration-150 hover:text-gtc-leaf focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gtc-green/35 active:text-gtc-green/80;
+    }
+
+    .public-header__nav-item.is-active,
+    .public-header__dropdown.is-active > .public-header__nav-item {
+        @apply bg-gtc-mint text-gtc-leaf;
+    }
+
+    .public-header__dropdown,
+    .public-header__mobile-dropdown {
+        @apply relative;
+    }
+
+    .public-header__dropdown > summary,
+    .public-header__mobile-dropdown > summary {
+        @apply list-none;
+    }
+
+    .public-header__dropdown > summary::-webkit-details-marker,
+    .public-header__mobile-dropdown > summary::-webkit-details-marker {
+        display: none;
+    }
+
+    .public-header__dropdown > .public-header__menu {
+        @apply absolute left-0 top-full mt-1 min-w-52;
+    }
+
+    .public-header__mobile-dropdown > .public-header__menu {
+        @apply absolute right-0 top-full mt-1 min-w-52;
     }
 
     .public-header__menu {
-        @apply border-zinc-200 bg-white dark:border-zinc-200 dark:bg-white;
+        @apply rounded-lg border border-zinc-200 bg-white p-1 shadow-md;
     }
 
     .public-header__menu-item {
-        @apply font-medium bg-white text-gtc-green transition-colors duration-150 hover:bg-gtc-mint hover:text-gtc-leaf focus-visible:bg-gtc-mint focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gtc-green/35 active:bg-gtc-mint active:text-gtc-green/80 dark:bg-white dark:hover:bg-gtc-mint dark:focus-visible:bg-gtc-mint dark:active:bg-gtc-mint;
+        @apply block rounded-md bg-white px-3 py-2 font-medium text-gtc-green transition-colors duration-150 hover:bg-gtc-mint hover:text-gtc-leaf focus-visible:bg-gtc-mint focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gtc-green/35 active:bg-gtc-mint active:text-gtc-green/80;
+    }
+
+    .public-header__menu-item.is-active {
+        @apply bg-gtc-mint text-gtc-leaf;
     }
 
     .public-header__inquiry-label {

@@ -1,170 +1,191 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="light">
-    <head>
-        @include('partials.head')
-    </head>
-    <body class="public-page">
-        @php($navigationCategories = \App\Models\Category::query()->orderBy('name')->get())
-        @php($inquiryListCount = collect(session('inquiry_list.items', []))->sum(fn (array $item): int => max(1, (int) ($item['quantity'] ?? 1))))
+<head>
+    @include('partials.head')
+</head>
+<body class="public-page">
+@php($navigationCategories = App\Models\Category::query()->orderBy('name')->get())
+@php($inquiryListCount = collect(session('inquiry_list.items', []))->sum(fn (array $item): int => max(1, (int) ($item['quantity'] ?? 1))))
+@php($currentCategoryParameter = request()->route('category'))
+@php($currentCategorySlug = is_object($currentCategoryParameter) ? ($currentCategoryParameter->slug ?? null) : $currentCategoryParameter)
 
-        <flux:header container class="public-header">
-            <flux:navbar>
-                <flux:navbar.item href="{{ route('home') }}" class="public-header__brand-link">
-                    <x-app-logo class="size-8" />
-                    <span class="public-header__brand-title">Gastro-Verleih Leipzig</span>
-                </flux:navbar.item>
-            </flux:navbar>
+<header class="public-header bg-white/95">
+    <div class="container public-header__container">
+        <a href="{{ route('home') }}" class="public-header__brand-link">
+            <x-app-logo class="size-8"/>
+            <span class="public-header__brand-title">Gastro-Verleih Leipzig</span>
+        </a>
 
-            <flux:spacer />
+        <nav class="public-header__desktop-nav" aria-label="{{ __('Hauptnavigation') }}">
+            <a
+                href="{{ route('home') }}"
+                class="public-header__nav-item !text-gtc-green {{ request()->routeIs('home') ? 'is-active' : '' }}"
+                @if (request()->routeIs('home')) aria-current="page" @endif
+            >
+                {{ __('Home') }}
+            </a>
 
-            <flux:navbar class="public-header__desktop-nav">
-                <flux:navbar.item
-                    href="{{ route('home') }}"
-                    :current="request()->routeIs('home')"
-                    class="public-header__nav-item"
-                >
-                    {{ __('Home') }}
-                </flux:navbar.item>
-                <flux:dropdown position="bottom" align="start">
-                    <flux:navbar.item
-                        icon-trailing="chevron-down"
-                        :current="request()->routeIs('category.show')"
-                        class="public-header__nav-item"
+            <details data-public-products-dropdown class="public-header__dropdown {{ request()->routeIs('category.show') ? 'is-active' : '' }}">
+                <summary class="public-header__nav-item">
+                    {{ __('Produkte') }}
+                </summary>
+
+                <div class="public-header__menu" role="menu">
+                    @foreach ($navigationCategories as $navigationCategory)
+                        <a
+                            href="{{ route('category.show', $navigationCategory->slug) }}"
+                            class="public-header__menu-item {{ request()->routeIs('category.show') && (string) $currentCategorySlug === (string) $navigationCategory->slug ? 'is-active' : '' }}"
+                            @if (request()->routeIs('category.show') && (string) $currentCategorySlug === (string) $navigationCategory->slug) aria-current="page" @endif
+                        >
+                            {{ $navigationCategory->name }}
+                        </a>
+                    @endforeach
+                </div>
+            </details>
+
+            <a
+                href="{{ route('inquiry.list') }}"
+                class="public-header__nav-item !text-gtc-green {{ request()->routeIs('inquiry.list') ? 'is-active' : '' }}"
+                @if (request()->routeIs('inquiry.list')) aria-current="page" @endif
+            >
+                <span class="public-header__inquiry-label">
+                    {{ __('Anfrageliste') }}
+
+                    @if ($inquiryListCount > 0)
+                        <span
+                            data-inquiry-count-badge
+                            data-inquiry-count="{{ $inquiryListCount }}"
+                            class="public-header__inquiry-badge"
+                        >
+                            {{ $inquiryListCount }}
+                        </span>
+                    @endif
+                </span>
+            </a>
+        </nav>
+
+        <nav class="public-header__mobile-nav md:hidden" aria-label="{{ __('Mobile Navigation') }}">
+            <details class="public-header__mobile-dropdown">
+                <summary class="public-header__nav-item">
+                    {{ __('Menü') }}
+                </summary>
+
+                <div class="public-header__menu">
+                    <a
+                        href="{{ route('home') }}"
+                        class="public-header__menu-item {{ request()->routeIs('home') ? 'is-active' : '' }}"
+                        @if (request()->routeIs('home')) aria-current="page" @endif
                     >
-                        {{ __('Produkte') }}
-                    </flux:navbar.item>
-
-                    <flux:menu class="public-header__menu">
-                        @foreach ($navigationCategories as $navigationCategory)
-                            <flux:menu.item
-                                :href="route('category.show', $navigationCategory->slug)"
-                                class="public-header__menu-item"
-                            >
-                                {{ $navigationCategory->name }}
-                            </flux:menu.item>
-                        @endforeach
-                    </flux:menu>
-                </flux:dropdown>
-                <flux:navbar.item
-                    href="{{ route('inquiry.list') }}"
-                    :current="request()->routeIs('inquiry.list')"
-                    class="public-header__nav-item"
-                >
-                    <span class="public-header__inquiry-label">
+                        {{ __('Home') }}
+                    </a>
+                    <a
+                        href="{{ route('inquiry.list') }}"
+                        class="public-header__menu-item {{ request()->routeIs('inquiry.list') ? 'is-active' : '' }}"
+                        @if (request()->routeIs('inquiry.list')) aria-current="page" @endif
+                    >
                         {{ __('Anfrageliste') }}
+                    </a>
 
-                        @if ($inquiryListCount > 0)
-                            <span
-                                data-inquiry-count-badge
-                                data-inquiry-count="{{ $inquiryListCount }}"
-                                class="public-header__inquiry-badge"
-                            >
-                                {{ $inquiryListCount }}
-                            </span>
-                        @endif
-                    </span>
-                </flux:navbar.item>
-            </flux:navbar>
-
-            <flux:navbar class="public-header__mobile-nav">
-                <flux:dropdown position="bottom" align="end">
-                    <flux:navbar.item
-                        icon-trailing="chevron-down"
-                        class="public-header__nav-item"
-                    >
-                        {{ __('Menü') }}
-                    </flux:navbar.item>
-
-                    <flux:menu class="public-header__menu">
-                        <flux:menu.item
-                            :href="route('home')"
-                            class="public-header__menu-item"
+                    @foreach ($navigationCategories as $navigationCategory)
+                        <a
+                            href="{{ route('category.show', $navigationCategory->slug) }}"
+                            class="public-header__menu-item {{ request()->routeIs('category.show') && (string) $currentCategorySlug === (string) $navigationCategory->slug ? 'is-active' : '' }}"
+                            @if (request()->routeIs('category.show') && (string) $currentCategorySlug === (string) $navigationCategory->slug) aria-current="page" @endif
                         >
-                            {{ __('Home') }}
-                        </flux:menu.item>
-                        <flux:menu.item
-                            :href="route('inquiry.list')"
-                            class="public-header__menu-item"
-                        >
-                            {{ __('Anfrageliste') }}
-                        </flux:menu.item>
-
-                        @foreach ($navigationCategories as $navigationCategory)
-                            <flux:menu.item
-                                :href="route('category.show', $navigationCategory->slug)"
-                                class="public-header__menu-item"
-                            >
-                                {{ $navigationCategory->name }}
-                            </flux:menu.item>
-                        @endforeach
-
-                    </flux:menu>
-                </flux:dropdown>
-            </flux:navbar>
-
-        </flux:header>
-
-        <flux:main container class="public-main">
-            {{ $slot }}
-        </flux:main>
-
-        <flux:footer container class="public-footer">
-            <div class="public-footer__content">
-                <div class="public-footer__brand">
-                    <x-app-logo class="size-6" />
-                    <span class="public-footer__brand-title">Gastro-Verleih Leipzig</span>
+                            {{ $navigationCategory->name }}
+                        </a>
+                    @endforeach
                 </div>
+            </details>
+        </nav>
+    </div>
+</header>
 
-                <flux:text variant="subtle" size="sm">
-                    &copy; {{ date('Y') }} Gastro-Verleih Leipzig. {{ __('Alle Rechte vorbehalten.') }}
-                </flux:text>
+<div>
+    <flux:container class="public-main">
+        {{ $slot }}
+    </flux:container>
+</div>
 
-                <div class="public-footer__links">
-                    <flux:link
-                        href="#"
-                        variant="ghost"
-                        size="sm"
-                        class="public-footer__link"
-                    >
-                        {{ __('Impressum') }}
-                    </flux:link>
-                    <flux:link
-                        href="#"
-                        variant="ghost"
-                        size="sm"
-                        class="public-footer__link"
-                    >
-                        {{ __('Datenschutz') }}
-                    </flux:link>
-                    @auth
-                        <flux:link
-                            :href="route('dashboard')"
-                            variant="ghost"
-                            size="sm"
-                            class="public-footer__link"
-                        >
-                            {{ __('Admin') }}
-                        </flux:link>
-                    @else
-                        <flux:link
-                            :href="route('login')"
-                            variant="ghost"
-                            size="sm"
-                            class="public-footer__link"
-                        >
-                            {{ __('Login') }}
-                        </flux:link>
-                    @endauth
-                </div>
-            </div>
-        </flux:footer>
+<flux:footer container class="public-footer">
+    <div class="public-footer__content">
+        <div class="public-footer__brand">
+            <x-app-logo class="size-6"/>
+            <span class="public-footer__brand-title">Gastro-Verleih Leipzig</span>
+        </div>
 
-        @persist('toast')
-            <flux:toast.group>
-                <flux:toast />
-            </flux:toast.group>
-        @endpersist
+        <flux:text variant="subtle" size="sm">
+            &copy; {{ date('Y') }} Gastro-Verleih Leipzig. {{ __('Alle Rechte vorbehalten.') }}
+        </flux:text>
 
-        @fluxScripts
-    </body>
+        <div class="public-footer__links">
+            <flux:link
+                href="#"
+                variant="ghost"
+                size="sm"
+                class="public-footer__link"
+            >
+                {{ __('Impressum') }}
+            </flux:link>
+            <flux:link
+                href="#"
+                variant="ghost"
+                size="sm"
+                class="public-footer__link"
+            >
+                {{ __('Datenschutz') }}
+            </flux:link>
+            @auth
+                <flux:link
+                    :href="route('dashboard')"
+                    variant="ghost"
+                    size="sm"
+                    class="public-footer__link"
+                >
+                    {{ __('Admin') }}
+                </flux:link>
+            @else
+                <flux:link
+                    :href="route('login')"
+                    variant="ghost"
+                    size="sm"
+                    class="public-footer__link"
+                >
+                    {{ __('Login') }}
+                </flux:link>
+            @endauth
+        </div>
+    </div>
+</flux:footer>
+
+@persist('toast')
+<flux:toast.group>
+    <flux:toast/>
+</flux:toast.group>
+@endpersist
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const productsDropdown = document.querySelector('[data-public-products-dropdown]');
+
+        if (!productsDropdown) {
+            return;
+        }
+
+        document.addEventListener('click', (event) => {
+            if (productsDropdown.open && !productsDropdown.contains(event.target)) {
+                productsDropdown.open = false;
+            }
+        });
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && productsDropdown.open) {
+                productsDropdown.open = false;
+            }
+        });
+    });
+</script>
+
+@fluxScripts
+</body>
 </html>
