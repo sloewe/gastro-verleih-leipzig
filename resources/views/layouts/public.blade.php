@@ -107,56 +107,31 @@
     </flux:container>
 </div>
 
-<flux:footer container class="public-footer">
-    <div class="public-footer__content">
-        <div class="public-footer__brand">
-            <x-app-logo class="size-6"/>
-            <span class="public-footer__brand-title">Gastro-Verleih Leipzig</span>
-        </div>
-
-        <flux:text variant="subtle" size="sm">
+<footer class="public-footer">
+    <div class="container public-footer__content">
+        <p class="public-footer__copyright">
             &copy; {{ date('Y') }} Gastro-Verleih Leipzig. {{ __('Alle Rechte vorbehalten.') }}
-        </flux:text>
+        </p>
 
         <div class="public-footer__links">
-            <flux:link
-                href="#"
-                variant="ghost"
-                size="sm"
-                class="public-footer__link"
-            >
+            <a href="#" class="public-footer__link">
                 {{ __('Impressum') }}
-            </flux:link>
-            <flux:link
-                href="#"
-                variant="ghost"
-                size="sm"
-                class="public-footer__link"
-            >
+            </a>
+            <a href="#" class="public-footer__link">
                 {{ __('Datenschutz') }}
-            </flux:link>
+            </a>
             @auth
-                <flux:link
-                    :href="route('dashboard')"
-                    variant="ghost"
-                    size="sm"
-                    class="public-footer__link"
-                >
+                <a href="{{ route('dashboard') }}" class="public-footer__link">
                     {{ __('Admin') }}
-                </flux:link>
+                </a>
             @else
-                <flux:link
-                    :href="route('login')"
-                    variant="ghost"
-                    size="sm"
-                    class="public-footer__link"
-                >
+                <a href="{{ route('login') }}" class="public-footer__link">
                     {{ __('Login') }}
-                </flux:link>
+                </a>
             @endauth
         </div>
     </div>
-</flux:footer>
+</footer>
 
 @persist('toast')
 <flux:toast.group>

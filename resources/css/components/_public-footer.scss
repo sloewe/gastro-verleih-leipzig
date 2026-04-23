@@ -1,25 +1,21 @@
 @layer components {
     .public-footer {
-        @apply mt-20 border-t border-zinc-200 bg-white py-12;
+        @apply mt-20 border-t border-zinc-700 bg-zinc-800 py-12 text-zinc-200;
     }
 
     .public-footer__content {
-        @apply flex flex-col items-center justify-between gap-6 md:flex-row;
-    }
-
-    .public-footer__brand {
-        @apply flex items-center gap-2;
-    }
-
-    .public-footer__brand-title {
-        @apply font-semibold tracking-tight text-gtc-green;
+        @apply flex flex-col items-center gap-6 ml-auto;
     }
 
     .public-footer__links {
-        @apply flex gap-4;
+        @apply flex flex-wrap items-center justify-center gap-4;
+    }
+
+    .public-footer__copyright {
+        @apply text-center text-sm text-zinc-300;
     }
 
     .public-footer__link {
-        @apply text-gtc-green transition-colors duration-150 hover:text-gtc-leaf focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gtc-green/35 active:text-gtc-green/80;
+        @apply text-sm text-zinc-200 transition-colors duration-150 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 active:text-zinc-300;
     }
 }
