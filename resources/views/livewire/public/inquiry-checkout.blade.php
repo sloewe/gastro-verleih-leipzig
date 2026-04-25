@@ -120,10 +120,6 @@
                                 <flux:text class="text-xs text-gtc-ink">{{ number_format($item['line_net'], 2, ',', '.') }} €</flux:text>
                             </div>
                             <div class="flex items-center justify-between">
-                                <flux:text class="text-xs text-gtc-muted">{{ __('vat') }} ({{ number_format($item['vat_rate'], 2, ',', '.') }}%)</flux:text>
-                                <flux:text class="text-xs text-gtc-ink">{{ number_format($item['line_vat'], 2, ',', '.') }} €</flux:text>
-                            </div>
-                            <div class="flex items-center justify-between">
                                 <flux:text class="text-xs font-semibold text-gtc-ink">{{ __('gross') }}</flux:text>
                                 <flux:text class="text-xs font-semibold text-gtc-ink">{{ number_format($item['line_gross'], 2, ',', '.') }} €</flux:text>
                             </div>
