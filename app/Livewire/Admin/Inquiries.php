@@ -20,6 +20,10 @@ class Inquiries extends Component
 
     public string $statusFilter = '';
 
+    public string $sortField = 'created_at';
+
+    public string $sortDirection = 'desc';
+
     #[Url(as: 'inquiry')]
     public ?int $selectedInquiryId = null;
 
@@ -32,6 +36,18 @@ class Inquiries extends Component
         'quote_created' => 'Angebot erstellt',
         'completed' => 'Abgeschlossen',
         'cancelled' => 'Storniert',
+    ];
+
+    /**
+     * @var list<string>
+     */
+    private const SORTABLE_FIELDS = [
+        'id',
+        'created_at',
+        'start_date',
+        'first_name',
+        'email',
+        'status',
     ];
 
     public function mount(): void
@@ -74,6 +90,22 @@ class Inquiries extends Component
         $this->selectedInquiryId = $inquiryId;
 
         $this->dispatch('modal-show', name: 'inquiry-details-modal');
+    }
+
+    public function sortBy(string $field): void
+    {
+        if (! in_array($field, self::SORTABLE_FIELDS, true)) {
+            return;
+        }
+
+        if ($this->sortField === $field) {
+            $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc';
+        } else {
+            $this->sortField = $field;
+            $this->sortDirection = 'desc';
+        }
+
+        $this->resetPage();
     }
 
     public function rendered(): void
@@ -134,7 +166,7 @@ class Inquiries extends Component
                 $this->statusFilter !== '',
                 fn ($query) => $query->where('status', $this->statusFilter)
             )
-            ->latest()
+            ->orderBy($this->sortField, $this->sortDirection)
             ->paginate(10);
 
         $selectedInquiry = null;

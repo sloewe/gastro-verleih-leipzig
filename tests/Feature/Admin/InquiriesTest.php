@@ -103,6 +103,66 @@ class InquiriesTest extends TestCase
             ->assertSee('#'.$inquiry->id);
     }
 
+    public function test_inquiry_period_is_visible_in_table(): void
+    {
+        $this->actingAs(User::factory()->create());
+
+        Inquiry::factory()->create([
+            'start_date' => '2026-06-01',
+            'end_date' => '2026-06-03',
+        ]);
+
+        $this->get(route('admin.inquiries'))
+            ->assertOk()
+            ->assertSee('Anfragezeitraum')
+            ->assertSee('01.06.2026 - 03.06.2026');
+    }
+
+    public function test_sorting_can_be_toggled_for_received_date(): void
+    {
+        $this->actingAs(User::factory()->create());
+
+        $olderInquiry = Inquiry::factory()->create([
+            'email' => 'older-toggle@example.com',
+            'created_at' => now()->subDay(),
+        ]);
+        $newerInquiry = Inquiry::factory()->create([
+            'email' => 'newer-toggle@example.com',
+            'created_at' => now(),
+        ]);
+
+        Livewire::test(Inquiries::class)
+            ->assertSeeInOrder([$newerInquiry->email, $olderInquiry->email])
+            ->call('sortBy', 'created_at')
+            ->assertSeeInOrder([$olderInquiry->email, $newerInquiry->email])
+            ->call('sortBy', 'created_at')
+            ->assertSeeInOrder([$newerInquiry->email, $olderInquiry->email]);
+    }
+
+    public function test_sorting_by_inquiry_period_uses_start_date(): void
+    {
+        $this->actingAs(User::factory()->create());
+
+        $earlierPeriodInquiry = Inquiry::factory()->create([
+            'email' => 'earlier-period@example.com',
+            'start_date' => '2026-05-01',
+            'end_date' => '2026-05-03',
+            'created_at' => now(),
+        ]);
+        $laterPeriodInquiry = Inquiry::factory()->create([
+            'email' => 'later-period@example.com',
+            'start_date' => '2026-07-01',
+            'end_date' => '2026-07-03',
+            'created_at' => now()->subDay(),
+        ]);
+
+        Livewire::test(Inquiries::class)
+            ->call('sortBy', 'start_date')
+            ->assertSeeInOrder([$laterPeriodInquiry->email, $earlierPeriodInquiry->email])
+            ->call('sortBy', 'start_date')
+            ->assertSeeInOrder([$earlierPeriodInquiry->email, $laterPeriodInquiry->email]);
+    }
+
     public function test_inquiry_query_parameter_preselects_inquiry_details(): void
     {
         $this->actingAs(User::factory()->create());

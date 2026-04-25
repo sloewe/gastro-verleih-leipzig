@@ -17,12 +17,13 @@
 
         <flux:table :paginate="$inquiries">
             <flux:table.columns>
-                <flux:table.column>ID</flux:table.column>
-                <flux:table.column>{{ __('received') }}</flux:table.column>
-                <flux:table.column>{{ __('customer') }}</flux:table.column>
-                <flux:table.column>{{ __('contact') }}</flux:table.column>
+                <flux:table.column sortable wire:click="sortBy('id')">ID</flux:table.column>
+                <flux:table.column sortable wire:click="sortBy('created_at')">{{ __('received') }}</flux:table.column>
+                <flux:table.column sortable wire:click="sortBy('start_date')">{{ __('inquiryPeriod') }}</flux:table.column>
+                <flux:table.column sortable wire:click="sortBy('first_name')">{{ __('customer') }}</flux:table.column>
+                <flux:table.column sortable wire:click="sortBy('email')">{{ __('contact') }}</flux:table.column>
                 <flux:table.column>{{ __('items') }}</flux:table.column>
-                <flux:table.column>{{ __('status') }}</flux:table.column>
+                <flux:table.column sortable wire:click="sortBy('status')">{{ __('status') }}</flux:table.column>
                 <flux:table.column></flux:table.column>
             </flux:table.columns>
 
@@ -31,6 +32,13 @@
                     <flux:table.row :key="$inquiry->id">
                         <flux:table.cell>#{{ $inquiry->id }}</flux:table.cell>
                         <flux:table.cell>{{ $inquiry->created_at->format('d.m.Y H:i') }}</flux:table.cell>
+                        <flux:table.cell>
+                            @if ($inquiry->start_date && $inquiry->end_date)
+                                {{ $inquiry->start_date->format('d.m.Y') }} - {{ $inquiry->end_date->format('d.m.Y') }}
+                            @else
+                                —
+                            @endif
+                        </flux:table.cell>
                         <flux:table.cell class="font-medium">
                             {{ trim($inquiry->first_name.' '.$inquiry->last_name) }}
                             @if ($inquiry->company)
