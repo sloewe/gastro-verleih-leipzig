@@ -24,6 +24,9 @@
                     <flux:sidebar.item icon="layout-grid" :href="route('admin.products')" :current="request()->routeIs('admin.products')" wire:navigate>
                         {{ __('Produkte') }}
                     </flux:sidebar.item>
+                    <flux:sidebar.item icon="inbox" :href="route('admin.inquiries')" :current="request()->routeIs('admin.inquiries')" wire:navigate>
+                        {{ __('Anfragen') }}
+                    </flux:sidebar.item>
                     <flux:sidebar.item icon="users" :href="route('admin.users')" :current="request()->routeIs('admin.users')" wire:navigate>
                         {{ __('Benutzer') }}
                     </flux:sidebar.item>

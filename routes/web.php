@@ -1,6 +1,7 @@
 <?php
 
 use App\Livewire\Admin\Categories;
+use App\Livewire\Admin\Inquiries;
 use App\Livewire\Admin\Pages;
 use App\Livewire\Admin\Products;
 use App\Livewire\Admin\Users;
@@ -24,6 +25,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::view('dashboard', 'dashboard')->name('dashboard');
     Route::get('admin/categories', Categories::class)->name('admin.categories');
     Route::get('admin/products', Products::class)->name('admin.products');
+    Route::get('admin/inquiries', Inquiries::class)->name('admin.inquiries');
     Route::get('admin/users', Users::class)->name('admin.users');
     Route::get('admin/pages', Pages::class)->name('admin.pages');
 });

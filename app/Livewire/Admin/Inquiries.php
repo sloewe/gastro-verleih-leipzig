@@ -1,0 +1,130 @@
+<?php
+
+namespace App\Livewire\Admin;
+
+use App\Models\Inquiry;
+use Flux\Flux;
+use Illuminate\Validation\Rule;
+use Livewire\Attributes\Layout;
+use Livewire\Component;
+use Livewire\WithPagination;
+
+class Inquiries extends Component
+{
+    use WithPagination;
+
+    public string $search = '';
+
+    public string $statusFilter = '';
+
+    public ?int $selectedInquiryId = null;
+
+    /**
+     * @var array<string, string>
+     */
+    private const STATUSES = [
+        'new' => 'Neu',
+        'in_progress' => 'In Bearbeitung',
+        'quote_created' => 'Angebot erstellt',
+        'completed' => 'Abgeschlossen',
+        'cancelled' => 'Storniert',
+    ];
+
+    public function mount(): void
+    {
+        $this->selectedInquiryId = Inquiry::query()->latest('created_at')->value('id');
+    }
+
+    public function updatingSearch(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatingStatusFilter(): void
+    {
+        $this->resetPage();
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    public function statusOptions(): array
+    {
+        return self::STATUSES;
+    }
+
+    public function selectInquiry(int $inquiryId): void
+    {
+        $this->selectedInquiryId = $inquiryId;
+    }
+
+    public function updateStatus(int $inquiryId, string $status): void
+    {
+        validator(
+            ['status' => $status],
+            ['status' => ['required', 'string', Rule::in(array_keys($this->statusOptions()))]]
+        )->validate();
+
+        $inquiry = Inquiry::query()->findOrFail($inquiryId);
+        $inquiry->update(['status' => $status]);
+
+        $this->selectedInquiryId = $inquiry->id;
+
+        Flux::toast(__('Status wurde aktualisiert.'));
+    }
+
+    public function statusLabel(string $status): string
+    {
+        return $this->statusOptions()[$status] ?? $status;
+    }
+
+    public function statusBadgeVariant(string $status): string
+    {
+        return match ($status) {
+            'completed' => 'success',
+            'cancelled' => 'danger',
+            'quote_created' => 'primary',
+            'in_progress' => 'warning',
+            default => 'outline',
+        };
+    }
+
+    #[Layout('layouts.app')]
+    public function render()
+    {
+        $inquiries = Inquiry::query()
+            ->with('products')
+            ->when(
+                $this->search !== '',
+                fn ($query) => $query
+                    ->where('first_name', 'like', '%'.$this->search.'%')
+                    ->orWhere('last_name', 'like', '%'.$this->search.'%')
+                    ->orWhere('email', 'like', '%'.$this->search.'%')
+                    ->orWhere('company', 'like', '%'.$this->search.'%')
+            )
+            ->when(
+                $this->statusFilter !== '',
+                fn ($query) => $query->where('status', $this->statusFilter)
+            )
+            ->latest()
+            ->paginate(10);
+
+        $selectedInquiry = null;
+
+        if ($this->selectedInquiryId !== null) {
+            $selectedInquiry = Inquiry::query()
+                ->with('products')
+                ->find($this->selectedInquiryId);
+        }
+
+        if ($selectedInquiry === null && $inquiries->isNotEmpty()) {
+            $selectedInquiry = $inquiries->first();
+            $this->selectedInquiryId = $selectedInquiry?->id;
+        }
+
+        return view('livewire.admin.inquiries', [
+            'inquiries' => $inquiries,
+            'selectedInquiry' => $selectedInquiry,
+        ]);
+    }
+}
