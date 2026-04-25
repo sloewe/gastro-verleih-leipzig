@@ -5,6 +5,7 @@ namespace App\Livewire\Admin;
 use App\Models\Category;
 use App\Models\Product;
 use Flux\Flux;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Layout;
@@ -111,14 +112,31 @@ class Products extends Component
         ];
 
         if ($this->image) {
-            if ($this->editing && $this->product->image_path) {
+            if ($this->editing && $this->product->image_path && ! $this->product->inquiries()->exists()) {
                 Storage::disk('public')->delete($this->product->image_path);
             }
             $data['image_path'] = $this->image->store('products', 'public');
         }
 
         if ($this->editing) {
-            $this->product->update($data);
+            if ($this->product->inquiries()->exists()) {
+                DB::transaction(function () use ($data): void {
+                    $originalSlug = $this->product->slug;
+
+                    $this->product->update([
+                        'slug' => $this->archivedSlug($originalSlug, $this->product->id),
+                    ]);
+
+                    $this->product->delete();
+
+                    Product::create(array_merge($data, [
+                        'slug' => $originalSlug,
+                        'supersedes_product_id' => $this->product->id,
+                    ]));
+                });
+            } else {
+                $this->product->update($data);
+            }
             Flux::toast(__('Produkt wurde aktualisiert.'));
         } else {
             Product::create($data);
@@ -138,7 +156,7 @@ class Products extends Component
 
     public function confirmDelete()
     {
-        if ($this->product->image_path) {
+        if ($this->product->image_path && ! $this->product->inquiries()->exists()) {
             Storage::disk('public')->delete($this->product->image_path);
         }
 
@@ -165,5 +183,10 @@ class Products extends Component
                 ->latest()
                 ->paginate(10),
         ]);
+    }
+
+    private function archivedSlug(string $slug, int $productId): string
+    {
+        return Str::limit($slug.'-archived-'.$productId, 255, '');
     }
 }

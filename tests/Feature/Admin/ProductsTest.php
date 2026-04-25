@@ -3,6 +3,7 @@
 namespace Tests\Feature\Admin;
 
 use App\Models\Category;
+use App\Models\Inquiry;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -89,7 +90,67 @@ class ProductsTest extends TestCase
             ->call('delete', $product->id)
             ->call('confirmDelete');
 
-        $this->assertDatabaseMissing('products', ['id' => $product->id]);
+        $this->assertSoftDeleted('products', ['id' => $product->id]);
         Storage::disk('public')->assertMissing('products/test.jpg');
+    }
+
+    public function test_deleting_product_linked_to_an_inquiry_soft_deletes_product_without_removing_image()
+    {
+        Storage::fake('public');
+        $product = Product::factory()->create([
+            'image_path' => 'products/linked.jpg',
+        ]);
+        Storage::disk('public')->put('products/linked.jpg', 'content');
+        $inquiry = Inquiry::factory()->create();
+        $inquiry->products()->attach($product->id, [
+            'quantity' => 1,
+            'feature_value' => null,
+        ]);
+
+        Livewire::test('admin.products')
+            ->call('delete', $product->id)
+            ->call('confirmDelete');
+
+        $this->assertSoftDeleted('products', ['id' => $product->id]);
+        Storage::disk('public')->assertExists('products/linked.jpg');
+    }
+
+    public function test_updating_product_linked_to_an_inquiry_creates_new_product_version()
+    {
+        $category = Category::factory()->create();
+        $product = Product::factory()->create([
+            'category_id' => $category->id,
+            'name' => 'Originalprodukt',
+            'slug' => 'originalprodukt',
+        ]);
+        $inquiry = Inquiry::factory()->create();
+        $inquiry->products()->attach($product->id, [
+            'quantity' => 2,
+            'feature_value' => null,
+        ]);
+
+        Livewire::test('admin.products')
+            ->call('edit', $product->id)
+            ->set('name', 'Aktualisierte Version')
+            ->call('save');
+
+        $this->assertSoftDeleted('products', ['id' => $product->id]);
+
+        $newProduct = Product::query()
+            ->where('name', 'Aktualisierte Version')
+            ->first();
+
+        $this->assertNotNull($newProduct);
+        $this->assertSame($product->id, $newProduct->supersedes_product_id);
+        $this->assertNotSame($product->id, $newProduct->id);
+
+        $product->refresh();
+        $this->assertStringContainsString('-archived-'.$product->id, $product->slug);
+
+        $this->assertDatabaseHas('inquiry_items', [
+            'inquiry_id' => $inquiry->id,
+            'product_id' => $product->id,
+            'quantity' => 2,
+        ]);
     }
 }

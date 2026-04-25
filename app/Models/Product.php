@@ -7,14 +7,18 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Product extends Model
 {
     /** @use HasFactory<ProductFactory> */
     use HasFactory;
 
+    use SoftDeletes;
+
     protected $fillable = [
         'category_id',
+        'supersedes_product_id',
         'name',
         'slug',
         'description',
@@ -39,6 +43,14 @@ class Product extends Model
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
+    }
+
+    /**
+     * @return BelongsTo<Product, Product>
+     */
+    public function supersededProduct(): BelongsTo
+    {
+        return $this->belongsTo(self::class, 'supersedes_product_id');
     }
 
     /**
