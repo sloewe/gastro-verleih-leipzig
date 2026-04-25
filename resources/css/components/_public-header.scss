@@ -67,6 +67,10 @@
         @apply bg-gtc-mint text-gtc-leaf;
     }
 
+    .public-header__menu-divider {
+        @apply my-1 border-t border-zinc-200;
+    }
+
     .public-header__inquiry-label {
         @apply relative inline-flex items-center pr-4;
     }

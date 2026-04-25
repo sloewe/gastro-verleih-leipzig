@@ -108,6 +108,7 @@ class InquiryCheckout extends Component
             ->send(new InquiryAdminNotificationMail($inquiry));
 
         session()->forget('inquiry_list.items');
+        $this->dispatch('inquiry-list-updated');
 
         $this->redirectRoute('inquiry.thank-you', navigate: true);
     }

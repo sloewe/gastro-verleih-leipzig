@@ -23,7 +23,8 @@ class InquiryListTest extends TestCase
 
         Livewire::test('public.product-details', ['slug' => $product->slug])
             ->set('selectedFeatureValue', 'Wochenende')
-            ->call('addToInquiryList');
+            ->call('addToInquiryList')
+            ->assertDispatched('inquiry-list-updated');
 
         $this->assertEquals([
             [
@@ -67,7 +68,8 @@ class InquiryListTest extends TestCase
         ]);
 
         Livewire::test('public.category-products', ['slug' => $category->slug])
-            ->call('addToInquiryList', $product->id);
+            ->call('addToInquiryList', $product->id)
+            ->assertDispatched('inquiry-list-updated');
 
         $this->assertEquals([
             [
@@ -95,17 +97,20 @@ class InquiryListTest extends TestCase
         ]);
 
         Livewire::test('public.inquiry-list')
-            ->call('increaseQuantity', $product->id.'|');
+            ->call('increaseQuantity', $product->id.'|')
+            ->assertDispatched('inquiry-list-updated');
 
         $this->assertEquals(2, session('inquiry_list.items.0.quantity'));
 
         Livewire::test('public.inquiry-list')
-            ->call('decreaseQuantity', $product->id.'|');
+            ->call('decreaseQuantity', $product->id.'|')
+            ->assertDispatched('inquiry-list-updated');
 
         $this->assertEquals(1, session('inquiry_list.items.0.quantity'));
 
         Livewire::test('public.inquiry-list')
-            ->call('removeItem', $product->id.'|');
+            ->call('removeItem', $product->id.'|')
+            ->assertDispatched('inquiry-list-updated');
 
         $this->assertSame([], session('inquiry_list.items'));
     }
@@ -214,5 +219,45 @@ class InquiryListTest extends TestCase
         $response
             ->assertOk()
             ->assertDontSee('data-inquiry-count-badge', false);
+    }
+
+    public function test_inquiry_list_badge_component_recalculates_count_when_update_event_is_dispatched(): void
+    {
+        $firstProduct = Product::factory()->create();
+        $secondProduct = Product::factory()->create();
+
+        $this->withSession([
+            'inquiry_list.items' => [
+                [
+                    'key' => $firstProduct->id.'|',
+                    'product_id' => $firstProduct->id,
+                    'feature_value' => '',
+                    'quantity' => 1,
+                ],
+            ],
+        ]);
+
+        Livewire::test('public.inquiry-list-badge')
+            ->assertSet('count', 1);
+
+        session()->put('inquiry_list.items', [
+            [
+                'key' => $firstProduct->id.'|',
+                'product_id' => $firstProduct->id,
+                'feature_value' => '',
+                'quantity' => 2,
+            ],
+            [
+                'key' => $secondProduct->id.'|',
+                'product_id' => $secondProduct->id,
+                'feature_value' => '',
+                'quantity' => 3,
+            ],
+        ]);
+
+        Livewire::test('public.inquiry-list-badge')
+            ->dispatch('inquiry-list-updated')
+            ->assertSet('count', 5)
+            ->assertSee('data-inquiry-count="5"', false);
     }
 }

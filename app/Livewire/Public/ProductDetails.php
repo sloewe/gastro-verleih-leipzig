@@ -56,6 +56,7 @@ class ProductDetails extends Component
         }
 
         session()->put('inquiry_list.items', $items->values()->all());
+        $this->dispatch('inquiry-list-updated');
 
         Flux::toast(__('Produkt zur Anfrageliste hinzugefügt.'));
     }

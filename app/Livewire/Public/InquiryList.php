@@ -99,6 +99,7 @@ class InquiryList extends Component
             ->all();
 
         session()->put('inquiry_list.items', $items);
+        $this->dispatch('inquiry-list-updated');
     }
 
     public function removeItem(string $key): void
@@ -109,6 +110,7 @@ class InquiryList extends Component
             ->all();
 
         session()->put('inquiry_list.items', $items);
+        $this->dispatch('inquiry-list-updated');
 
         Flux::toast(__('Position wurde entfernt.'));
     }

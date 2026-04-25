@@ -5,7 +5,6 @@
 </head>
 <body class="public-page">
 @php($navigationCategories = App\Models\Category::query()->orderBy('name')->get())
-@php($inquiryListCount = collect(session('inquiry_list.items', []))->sum(fn (array $item): int => max(1, (int) ($item['quantity'] ?? 1))))
 @php($currentCategoryParameter = request()->route('category'))
 @php($currentCategorySlug = is_object($currentCategoryParameter) ? ($currentCategoryParameter->slug ?? null) : $currentCategoryParameter)
 
@@ -48,19 +47,7 @@
                 class="public-header__nav-item !text-gtc-green {{ request()->routeIs('inquiry.list') ? 'is-active' : '' }}"
                 @if (request()->routeIs('inquiry.list')) aria-current="page" @endif
             >
-                <span class="public-header__inquiry-label">
-                    {{ __('Anfrageliste') }}
-
-                    @if ($inquiryListCount > 0)
-                        <span
-                            data-inquiry-count-badge
-                            data-inquiry-count="{{ $inquiryListCount }}"
-                            class="public-header__inquiry-badge"
-                        >
-                            {{ $inquiryListCount }}
-                        </span>
-                    @endif
-                </span>
+                <livewire:public.inquiry-list-badge />
             </a>
         </nav>
 
@@ -78,13 +65,7 @@
                     >
                         {{ __('Home') }}
                     </a>
-                    <a
-                        href="{{ route('inquiry.list') }}"
-                        class="public-header__menu-item {{ request()->routeIs('inquiry.list') ? 'is-active' : '' }}"
-                        @if (request()->routeIs('inquiry.list')) aria-current="page" @endif
-                    >
-                        {{ __('Anfrageliste') }}
-                    </a>
+                    <div class="public-header__menu-divider" aria-hidden="true"></div>
 
                     @foreach ($navigationCategories as $navigationCategory)
                         <a
@@ -95,6 +76,15 @@
                             {{ $navigationCategory->name }}
                         </a>
                     @endforeach
+
+                    <div class="public-header__menu-divider" aria-hidden="true"></div>
+                    <a
+                        href="{{ route('inquiry.list') }}"
+                        class="public-header__menu-item {{ request()->routeIs('inquiry.list') ? 'is-active' : '' }}"
+                        @if (request()->routeIs('inquiry.list')) aria-current="page" @endif
+                    >
+                        {{ __('Anfrageliste') }}
+                    </a>
                 </div>
             </details>
         </nav>

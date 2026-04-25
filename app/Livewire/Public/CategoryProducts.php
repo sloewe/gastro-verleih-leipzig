@@ -42,6 +42,7 @@ class CategoryProducts extends Component
         }
 
         $this->storeSessionItem($product->id, $featureValue);
+        $this->dispatch('inquiry-list-updated');
 
         Flux::toast(__('Produkt zur Anfrageliste hinzugefügt.'));
     }
