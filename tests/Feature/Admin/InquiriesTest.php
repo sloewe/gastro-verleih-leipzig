@@ -48,7 +48,7 @@ class InquiriesTest extends TestCase
         $response->assertSeeInOrder([$newerInquiry->email, $olderInquiry->email]);
     }
 
-    public function test_detail_panel_shows_inquiry_customer_data_and_items(): void
+    public function test_inquiry_details_show_customer_data_and_items(): void
     {
         $this->actingAs(User::factory()->create());
 
@@ -92,7 +92,18 @@ class InquiriesTest extends TestCase
         ]);
     }
 
-    public function test_inquiry_query_parameter_preselects_detail_panel(): void
+    public function test_inquiry_id_is_visible_in_table(): void
+    {
+        $this->actingAs(User::factory()->create());
+
+        $inquiry = Inquiry::factory()->create();
+
+        $this->get(route('admin.inquiries'))
+            ->assertOk()
+            ->assertSee('#'.$inquiry->id);
+    }
+
+    public function test_inquiry_query_parameter_preselects_inquiry_details(): void
     {
         $this->actingAs(User::factory()->create());
 
@@ -110,6 +121,7 @@ class InquiriesTest extends TestCase
         Livewire::withQueryParams(['inquiry' => $olderInquiry->id])
             ->test(Inquiries::class)
             ->assertSet('selectedInquiryId', $olderInquiry->id)
+            ->assertDispatched('modal-show', name: 'inquiry-details-modal')
             ->assertSee('Anfrage #'.$olderInquiry->id)
             ->assertSee('Anna Alt');
     }

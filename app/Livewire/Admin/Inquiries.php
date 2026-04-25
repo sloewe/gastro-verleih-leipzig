@@ -14,6 +14,8 @@ class Inquiries extends Component
 {
     use WithPagination;
 
+    private bool $shouldOpenDetailsModal = false;
+
     public string $search = '';
 
     public string $statusFilter = '';
@@ -39,6 +41,8 @@ class Inquiries extends Component
 
             if (! $inquiryExists) {
                 $this->selectedInquiryId = null;
+            } else {
+                $this->shouldOpenDetailsModal = true;
             }
         }
 
@@ -68,6 +72,18 @@ class Inquiries extends Component
     public function selectInquiry(int $inquiryId): void
     {
         $this->selectedInquiryId = $inquiryId;
+
+        $this->dispatch('modal-show', name: 'inquiry-details-modal');
+    }
+
+    public function rendered(): void
+    {
+        if (! $this->shouldOpenDetailsModal) {
+            return;
+        }
+
+        $this->dispatch('modal-show', name: 'inquiry-details-modal');
+        $this->shouldOpenDetailsModal = false;
     }
 
     public function updateStatus(int $inquiryId, string $status): void
