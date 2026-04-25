@@ -13,6 +13,8 @@ use Livewire\Component;
 
 class Dashboard extends Component
 {
+    public ?int $selectedInquiryId = null;
+
     /**
      * @var array<string, string>
      */
@@ -162,6 +164,19 @@ class Dashboard extends Component
         return self::STATUS_LABELS[$status] ?? $status;
     }
 
+    public function selectInquiry(int $inquiryId): void
+    {
+        $exists = Inquiry::query()->whereKey($inquiryId)->exists();
+
+        if (! $exists) {
+            return;
+        }
+
+        $this->selectedInquiryId = $inquiryId;
+
+        $this->dispatch('modal-show', name: 'dashboard-inquiry-details-modal');
+    }
+
     /**
      * @param  Collection<int, Inquiry>  $rows
      * @return list<array{month: string, count: int}>
@@ -272,8 +287,17 @@ class Dashboard extends Component
     #[Layout('layouts.app')]
     public function render()
     {
+        $selectedInquiry = null;
+
+        if ($this->selectedInquiryId !== null) {
+            $selectedInquiry = Inquiry::query()
+                ->with('products')
+                ->find($this->selectedInquiryId);
+        }
+
         return view('livewire.admin.dashboard', [
             'metrics' => $this->metrics(),
+            'selectedInquiry' => $selectedInquiry,
         ]);
     }
 }

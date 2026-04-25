@@ -2,11 +2,13 @@
 
 namespace Tests\Feature;
 
+use App\Livewire\Admin\Dashboard;
 use App\Models\Inquiry;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Carbon;
+use Livewire\Livewire;
 use Tests\TestCase;
 
 class DashboardTest extends TestCase
@@ -139,5 +141,30 @@ class DashboardTest extends TestCase
         } finally {
             Carbon::setTestNow();
         }
+    }
+
+    public function test_dashboard_opens_selected_inquiry_details_in_modal(): void
+    {
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        $product = Product::factory()->create(['name' => 'Stehtisch Classic']);
+
+        $inquiry = Inquiry::factory()->create([
+            'first_name' => 'Max',
+            'last_name' => 'Mustermann',
+            'email' => 'max@example.test',
+            'message' => 'Bitte mit Lieferung.',
+        ]);
+        $inquiry->products()->attach($product->id, ['quantity' => 2, 'feature_value' => 'Buche']);
+
+        Livewire::test(Dashboard::class)
+            ->call('selectInquiry', $inquiry->id)
+            ->assertSet('selectedInquiryId', $inquiry->id)
+            ->assertSeeText('Anfrage #'.$inquiry->id)
+            ->assertSeeText('Max Mustermann')
+            ->assertSeeText('Bitte mit Lieferung.')
+            ->assertSeeText('Stehtisch Classic')
+            ->assertDispatched('modal-show', name: 'dashboard-inquiry-details-modal');
     }
 }

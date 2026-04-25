@@ -196,9 +196,9 @@ class InquiryCheckoutTest extends TestCase
         $response
             ->assertOk()
             ->assertSee('40,00 €')
-            ->assertSee('Mehrwertsteuer 19%')
+            ->assertSee('MwSt. 19%')
             ->assertSee('3,80 €')
-            ->assertSee('Mehrwertsteuer 7%')
+            ->assertSee('MwSt. 7%')
             ->assertSee('1,40 €')
             ->assertSee('45,20 €')
             ->assertSee('Bruttosumme');

@@ -32,7 +32,11 @@
 
             <div class="space-y-2">
                 @forelse ($metrics['recentInquiries'] as $inquiry)
-                    <div class="flex items-center justify-between gap-3 rounded-md border border-zinc-200 px-3 py-2 text-sm text-zinc-700 dark:border-zinc-700 dark:text-zinc-200">
+                    <button
+                        wire:click="selectInquiry({{ $inquiry->id }})"
+                        type="button"
+                        class="flex w-full cursor-pointer items-center justify-between gap-3 rounded-md border border-zinc-200 px-3 py-2 text-left text-sm text-zinc-700 transition hover:border-zinc-300 hover:bg-zinc-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400 dark:border-zinc-700 dark:text-zinc-200 dark:hover:border-zinc-600 dark:hover:bg-zinc-800/60 dark:focus-visible:ring-zinc-500"
+                    >
                         <div>
                             <div class="font-medium">{{ trim($inquiry->first_name.' '.$inquiry->last_name) }}</div>
                             <div class="text-xs text-zinc-500">{{ $inquiry->created_at->format('d.m.Y H:i') }}</div>
@@ -41,7 +45,7 @@
                             <div class="text-xs text-zinc-500">{{ __('items') }}: {{ $inquiry->products_count }}</div>
                             <flux:badge size="sm">{{ __($this->statusLabel($inquiry->status)) }}</flux:badge>
                         </div>
-                    </div>
+                    </button>
                 @empty
                     <flux:text>{{ __('noInquiriesAvailableYet') }}</flux:text>
                 @endforelse
@@ -182,5 +186,78 @@
             </div>
         </div>
     </div>
+
+    <flux:modal name="dashboard-inquiry-details-modal" class="max-w-5xl">
+        @if ($selectedInquiry)
+            <div class="space-y-5">
+                <div class="flex items-start justify-between gap-4 pr-12">
+                    <div>
+                        <flux:heading size="lg">{{ __('inquiryNumberId', ['id' => $selectedInquiry->id]) }}</flux:heading>
+                        <flux:subheading>{{ __('Eingegangen am :date', ['date' => $selectedInquiry->created_at->format('d.m.Y H:i')]) }}</flux:subheading>
+                    </div>
+                    <flux:badge class="shrink-0">{{ __($this->statusLabel($selectedInquiry->status)) }}</flux:badge>
+                </div>
+
+                <flux:separator text="{{ __('customerData') }}" />
+
+                <dl class="space-y-2 text-sm text-zinc-700 dark:text-zinc-200">
+                    <div class="grid grid-cols-[10rem_1fr] gap-3">
+                        <dt class="text-zinc-500">{{ __('Name') }}</dt>
+                        <dd>{{ trim($selectedInquiry->first_name.' '.$selectedInquiry->last_name) }}</dd>
+                    </div>
+                    <div class="grid grid-cols-[10rem_1fr] gap-3">
+                        <dt class="text-zinc-500">{{ __('company') }}</dt>
+                        <dd>{{ $selectedInquiry->company ?: '—' }}</dd>
+                    </div>
+                    <div class="grid grid-cols-[10rem_1fr] gap-3">
+                        <dt class="text-zinc-500">{{ __('email') }}</dt>
+                        <dd>{{ $selectedInquiry->email }}</dd>
+                    </div>
+                    <div class="grid grid-cols-[10rem_1fr] gap-3">
+                        <dt class="text-zinc-500">{{ __('phone') }}</dt>
+                        <dd>{{ $selectedInquiry->phone ?: '—' }}</dd>
+                    </div>
+                    <div class="grid grid-cols-[10rem_1fr] gap-3">
+                        <dt class="text-zinc-500">{{ __('inquiryPeriod') }}</dt>
+                        <dd>
+                            @if ($selectedInquiry->start_date && $selectedInquiry->end_date)
+                                {{ $selectedInquiry->start_date->format('d.m.Y') }} - {{ $selectedInquiry->end_date->format('d.m.Y') }}
+                            @else
+                                —
+                            @endif
+                        </dd>
+                    </div>
+                    <div class="grid grid-cols-[10rem_1fr] gap-3">
+                        <dt class="text-zinc-500">{{ __('message') }}</dt>
+                        <dd class="whitespace-pre-line">{{ $selectedInquiry->message ?: '—' }}</dd>
+                    </div>
+                </dl>
+
+                <flux:separator text="{{ __('requestedProducts') }}" />
+
+                <div class="space-y-3">
+                    @forelse ($selectedInquiry->products as $product)
+                        <div wire:key="dashboard-inquiry-product-{{ $selectedInquiry->id }}-{{ $product->id }}" class="rounded-md border border-zinc-200 px-4 py-3 dark:border-zinc-700">
+                            <div class="flex items-start justify-between gap-3">
+                                <div>
+                                    <div class="font-medium text-zinc-700 dark:text-zinc-200">{{ $product->name }}</div>
+                                    @if ($product->pivot->feature_value)
+                                        <div class="text-xs text-zinc-500">
+                                            {{ __('Merkmal: :value', ['value' => $product->pivot->feature_value]) }}
+                                        </div>
+                                    @endif
+                                </div>
+                                <flux:badge size="sm" inset="top bottom">
+                                    {{ __('Menge: :quantity', ['quantity' => $product->pivot->quantity]) }}
+                                </flux:badge>
+                            </div>
+                        </div>
+                    @empty
+                        <flux:text>{{ __('noItemsAvailable') }}</flux:text>
+                    @endforelse
+                </div>
+            </div>
+        @endif
+    </flux:modal>
 
 </div>
