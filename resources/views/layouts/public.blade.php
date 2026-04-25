@@ -4,8 +4,23 @@
     @include('partials.head')
 </head>
 <body class="public-page">
-@php($navigationCategories = App\Models\Category::query()->orderBy('name')->get())
-@php($navigationPages = App\Models\Page::query()->where('show_in_navigation', true)->orderByRaw('COALESCE(navigation_label, title)')->get())
+@php(
+    $navigationCategories = Illuminate\Support\Facades\Cache::remember(
+        'navigation.categories',
+        now()->addDay(),
+        fn () => App\Models\Category::query()->orderBy('name')->get()
+    )
+)
+@php(
+    $navigationPages = Illuminate\Support\Facades\Cache::remember(
+        'navigation.pages',
+        now()->addDay(),
+        fn () => App\Models\Page::query()
+            ->where('show_in_navigation', true)
+            ->orderBy('navigation_label')
+            ->get()
+    )
+)
 @php($currentCategoryParameter = request()->route('category'))
 @php($currentCategorySlug = is_object($currentCategoryParameter) ? ($currentCategoryParameter->slug ?? null) : $currentCategoryParameter)
 

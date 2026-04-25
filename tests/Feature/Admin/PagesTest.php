@@ -6,6 +6,7 @@ use App\Livewire\Admin\Pages;
 use App\Models\Page;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Cache;
 use Livewire\Livewire;
 use Tests\TestCase;
 
@@ -137,5 +138,61 @@ class PagesTest extends TestCase
             ->assertDispatched('modal-show', name: 'page-editor-modal')
             ->call('edit', $page->id)
             ->assertDispatched('modal-show', name: 'page-editor-modal');
+    }
+
+    public function test_navigation_cache_is_cleared_when_page_is_created(): void
+    {
+        Cache::put('navigation.categories', collect(['cached']));
+        Cache::put('navigation.pages', collect(['cached']));
+
+        Livewire::actingAs($this->user)
+            ->test(Pages::class)
+            ->set('title', 'Kontakt')
+            ->set('slug', 'kontakt')
+            ->set('show_in_navigation', true)
+            ->set('navigation_label', 'Kontakt')
+            ->set('blocks', [
+                ['id' => null, 'type' => 'markdown', 'content_markdown' => 'Kontakttext'],
+            ])
+            ->call('save')
+            ->assertHasNoErrors();
+
+        $this->assertFalse(Cache::has('navigation.categories'));
+        $this->assertFalse(Cache::has('navigation.pages'));
+    }
+
+    public function test_navigation_cache_is_cleared_when_page_is_updated(): void
+    {
+        $page = Page::query()->create([
+            'title' => 'Kontakt',
+            'slug' => 'kontakt',
+            'show_in_navigation' => true,
+            'navigation_label' => 'Kontakt',
+        ]);
+
+        $page->blocks()->create([
+            'type' => 'markdown',
+            'content_markdown' => 'Alt',
+            'sort_order' => 1,
+        ]);
+
+        Cache::put('navigation.categories', collect(['cached']));
+        Cache::put('navigation.pages', collect(['cached']));
+
+        Livewire::actingAs($this->user)
+            ->test(Pages::class)
+            ->call('edit', $page->id)
+            ->set('title', 'Kontakt Neu')
+            ->set('slug', 'kontakt-neu')
+            ->set('show_in_navigation', true)
+            ->set('navigation_label', 'Kontakt Neu')
+            ->set('blocks', [
+                ['id' => null, 'type' => 'markdown', 'content_markdown' => 'Neu'],
+            ])
+            ->call('save')
+            ->assertHasNoErrors();
+
+        $this->assertFalse(Cache::has('navigation.categories'));
+        $this->assertFalse(Cache::has('navigation.pages'));
     }
 }

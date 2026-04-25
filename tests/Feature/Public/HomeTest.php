@@ -3,7 +3,9 @@
 namespace Tests\Feature\Public;
 
 use App\Models\Category;
+use App\Models\Page;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Cache;
 use Livewire\Livewire;
 use Tests\TestCase;
 
@@ -70,5 +72,24 @@ class HomeTest extends TestCase
             ->assertStatus(200)
             ->assertSee('data-public-products-dropdown', false)
             ->assertSee('productsDropdown.open = false;', false);
+    }
+
+    public function test_home_page_populates_navigation_cache_entries(): void
+    {
+        Cache::forget('navigation.categories');
+        Cache::forget('navigation.pages');
+
+        Category::factory()->create(['name' => 'Kuehlung', 'slug' => 'kuehlung']);
+        Page::query()->create([
+            'title' => 'Impressum',
+            'slug' => 'impressum',
+            'show_in_navigation' => true,
+            'navigation_label' => 'Impressum',
+        ]);
+
+        $this->get(route('home'))->assertOk();
+
+        $this->assertTrue(Cache::has('navigation.categories'));
+        $this->assertTrue(Cache::has('navigation.pages'));
     }
 }

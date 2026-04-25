@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Cache;
 use Livewire\Livewire;
 use Tests\TestCase;
 
@@ -118,5 +119,43 @@ class CategoriesTest extends TestCase
             ->set('slug', '')
             ->call('save')
             ->assertHasErrors(['name' => 'required', 'slug' => 'required']);
+    }
+
+    public function test_navigation_cache_is_cleared_when_category_is_created(): void
+    {
+        Cache::put('navigation.categories', collect(['cached']));
+        Cache::put('navigation.pages', collect(['cached']));
+
+        Livewire::actingAs($this->user)
+            ->test(Categories::class)
+            ->set('name', 'Neue Kategorie')
+            ->set('slug', 'neue-kategorie')
+            ->call('save')
+            ->assertHasNoErrors();
+
+        $this->assertFalse(Cache::has('navigation.categories'));
+        $this->assertFalse(Cache::has('navigation.pages'));
+    }
+
+    public function test_navigation_cache_is_cleared_when_category_is_updated(): void
+    {
+        $category = Category::factory()->create([
+            'name' => 'Alt',
+            'slug' => 'alt',
+        ]);
+
+        Cache::put('navigation.categories', collect(['cached']));
+        Cache::put('navigation.pages', collect(['cached']));
+
+        Livewire::actingAs($this->user)
+            ->test(Categories::class)
+            ->call('edit', $category->id)
+            ->set('name', 'Neu')
+            ->set('slug', 'neu')
+            ->call('save')
+            ->assertHasNoErrors();
+
+        $this->assertFalse(Cache::has('navigation.categories'));
+        $this->assertFalse(Cache::has('navigation.pages'));
     }
 }
