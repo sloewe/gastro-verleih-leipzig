@@ -44,7 +44,7 @@ class HomeTest extends TestCase
     {
         $this->get(route('home'))
             ->assertStatus(200)
-            ->assertSee(__('Menü'))
+            ->assertSee(__('menu'))
             ->assertSee('md:hidden');
     }
 
