@@ -23,6 +23,10 @@ class Pages extends Component
 
     public string $meta_description = '';
 
+    public bool $show_in_navigation = false;
+
+    public string $navigation_label = '';
+
     /**
      * @var array<int, array{id:int|null,type:string,content_markdown:string}>
      */
@@ -50,6 +54,8 @@ class Pages extends Component
         $this->editing = true;
         $this->title = $page->title;
         $this->slug = $page->slug;
+        $this->show_in_navigation = $page->show_in_navigation;
+        $this->navigation_label = $page->navigation_label ?? '';
         $this->meta_title = $page->meta_title ?? '';
         $this->meta_description = $page->meta_description ?? '';
         $this->blocks = $page->blocks
@@ -134,6 +140,8 @@ class Pages extends Component
             ],
             'meta_title' => ['nullable', 'max:255'],
             'meta_description' => ['nullable', 'max:500'],
+            'show_in_navigation' => ['boolean'],
+            'navigation_label' => ['nullable', 'string', 'max:255'],
             'blocks' => ['required', 'array', 'min:1'],
             'blocks.*.type' => ['required', Rule::in(['markdown'])],
             'blocks.*.content_markdown' => ['nullable', 'string'],
@@ -144,6 +152,10 @@ class Pages extends Component
             [
                 'title' => $validated['title'],
                 'slug' => $validated['slug'],
+                'show_in_navigation' => $validated['show_in_navigation'],
+                'navigation_label' => $validated['show_in_navigation']
+                    ? ($validated['navigation_label'] ?: null)
+                    : null,
                 'meta_title' => $validated['meta_title'] ?: null,
                 'meta_description' => $validated['meta_description'] ?: null,
             ]
@@ -182,7 +194,17 @@ class Pages extends Component
 
     private function resetEditor(): void
     {
-        $this->reset(['page', 'title', 'slug', 'meta_title', 'meta_description', 'blocks', 'editing']);
+        $this->reset([
+            'page',
+            'title',
+            'slug',
+            'show_in_navigation',
+            'navigation_label',
+            'meta_title',
+            'meta_description',
+            'blocks',
+            'editing',
+        ]);
     }
 
     #[Layout('layouts.app')]

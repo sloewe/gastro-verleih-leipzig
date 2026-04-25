@@ -56,6 +56,19 @@
                 </flux:field>
 
                 <flux:field>
+                    <flux:checkbox wire:model.live="show_in_navigation" :label="__('In Hauptnavigation anzeigen')" />
+                    <flux:error name="show_in_navigation" />
+                </flux:field>
+
+                @if ($show_in_navigation)
+                    <flux:field>
+                        <flux:label>{{ __('Menübezeichner (optional)') }}</flux:label>
+                        <flux:input wire:model="navigation_label" />
+                        <flux:error name="navigation_label" />
+                    </flux:field>
+                @endif
+
+                <flux:field>
                     <flux:label>{{ __('Meta Title (optional)') }}</flux:label>
                     <flux:input wire:model="meta_title" />
                     <flux:error name="meta_title" />

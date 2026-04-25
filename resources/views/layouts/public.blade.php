@@ -5,6 +5,7 @@
 </head>
 <body class="public-page">
 @php($navigationCategories = App\Models\Category::query()->orderBy('name')->get())
+@php($navigationPages = App\Models\Page::query()->where('show_in_navigation', true)->orderByRaw('COALESCE(navigation_label, title)')->get())
 @php($currentCategoryParameter = request()->route('category'))
 @php($currentCategorySlug = is_object($currentCategoryParameter) ? ($currentCategoryParameter->slug ?? null) : $currentCategoryParameter)
 
@@ -42,6 +43,16 @@
                 </div>
             </details>
 
+            @foreach ($navigationPages as $navigationPage)
+                <a
+                    href="{{ route('content.page', $navigationPage->slug) }}"
+                    class="public-header__nav-item !text-gtc-green {{ request()->routeIs('content.page') && request()->route('slug') === $navigationPage->slug ? 'is-active' : '' }}"
+                    @if (request()->routeIs('content.page') && request()->route('slug') === $navigationPage->slug) aria-current="page" @endif
+                >
+                    {{ $navigationPage->navigation_label ?: $navigationPage->title }}
+                </a>
+            @endforeach
+
             <a
                 href="{{ route('inquiry.list') }}"
                 class="public-header__nav-item !text-gtc-green {{ request()->routeIs('inquiry.list') ? 'is-active' : '' }}"
@@ -74,6 +85,16 @@
                             @if (request()->routeIs('category.show') && (string) $currentCategorySlug === (string) $navigationCategory->slug) aria-current="page" @endif
                         >
                             {{ $navigationCategory->name }}
+                        </a>
+                    @endforeach
+
+                    @foreach ($navigationPages as $navigationPage)
+                        <a
+                            href="{{ route('content.page', $navigationPage->slug) }}"
+                            class="public-header__menu-item {{ request()->routeIs('content.page') && request()->route('slug') === $navigationPage->slug ? 'is-active' : '' }}"
+                            @if (request()->routeIs('content.page') && request()->route('slug') === $navigationPage->slug) aria-current="page" @endif
+                        >
+                            {{ $navigationPage->navigation_label ?: $navigationPage->title }}
                         </a>
                     @endforeach
 

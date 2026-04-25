@@ -35,6 +35,8 @@ class PagesTest extends TestCase
             ->test(Pages::class)
             ->set('title', 'Impressum')
             ->set('slug', 'impressum')
+            ->set('show_in_navigation', true)
+            ->set('navigation_label', 'Rechtliches')
             ->set('blocks', [
                 ['id' => null, 'type' => 'markdown', 'content_markdown' => '# Abschnitt 1'],
                 ['id' => null, 'type' => 'markdown', 'content_markdown' => 'Text für Abschnitt 2'],
@@ -48,6 +50,8 @@ class PagesTest extends TestCase
             'id' => $page->id,
             'title' => 'Impressum',
             'slug' => 'impressum',
+            'show_in_navigation' => true,
+            'navigation_label' => 'Rechtliches',
         ]);
         $this->assertDatabaseHas('page_blocks', [
             'page_id' => $page->id,
@@ -68,6 +72,8 @@ class PagesTest extends TestCase
         $page = Page::query()->create([
             'title' => 'Datenschutz',
             'slug' => 'datenschutz',
+            'show_in_navigation' => true,
+            'navigation_label' => 'Datenschutz',
         ]);
 
         $page->blocks()->createMany([
@@ -80,12 +86,16 @@ class PagesTest extends TestCase
             ->call('edit', $page->id)
             ->call('moveBlockUp', 1)
             ->set('title', 'Datenschutz aktualisiert')
+            ->set('show_in_navigation', false)
+            ->set('navigation_label', 'Datenschutzmenü')
             ->call('save')
             ->assertHasNoErrors();
 
         $page->refresh();
 
         $this->assertSame('Datenschutz aktualisiert', $page->title);
+        $this->assertFalse((bool) $page->show_in_navigation);
+        $this->assertNull($page->navigation_label);
         $this->assertSame(
             ['Zweiter Block', 'Erster Block'],
             $page->blocks()->orderBy('sort_order')->pluck('content_markdown')->all()

@@ -30,12 +30,41 @@ class ContentPagesTest extends TestCase
             ->assertSee('Musterstraße 1');
     }
 
-    public function test_footer_links_point_to_cms_slug_routes(): void
+    public function test_navigation_contains_only_pages_marked_for_navigation(): void
     {
+        Page::query()->create([
+            'title' => 'Impressum',
+            'slug' => 'impressum',
+            'show_in_navigation' => true,
+            'navigation_label' => 'Rechtliches',
+        ]);
+        Page::query()->create([
+            'title' => 'Datenschutz',
+            'slug' => 'datenschutz',
+            'show_in_navigation' => false,
+            'navigation_label' => 'NichtImMenue',
+        ]);
+
         $this->get(route('home'))
             ->assertOk()
             ->assertSee(route('content.page', 'impressum'), false)
-            ->assertSee(route('content.page', 'datenschutz'), false);
+            ->assertSee('Rechtliches')
+            ->assertDontSee('NichtImMenue');
+    }
+
+    public function test_navigation_uses_page_title_when_navigation_label_is_empty(): void
+    {
+        Page::query()->create([
+            'title' => 'FAQ',
+            'slug' => 'faq',
+            'show_in_navigation' => true,
+            'navigation_label' => null,
+        ]);
+
+        $this->get(route('home'))
+            ->assertOk()
+            ->assertSee(route('content.page', 'faq'), false)
+            ->assertSee('FAQ');
     }
 
     public function test_existing_category_routes_remain_accessible_with_slug_catch_all(): void

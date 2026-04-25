@@ -13,6 +13,8 @@ class Page extends Model
     protected $fillable = [
         'title',
         'slug',
+        'show_in_navigation',
+        'navigation_label',
         'meta_title',
         'meta_description',
     ];
