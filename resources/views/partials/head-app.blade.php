@@ -1,2 +1,1 @@
 @include('partials.head')
-@fluxAppearance
