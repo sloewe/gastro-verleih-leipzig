@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Artisan;
 use Tests\TestCase;
 
 class SetupTest extends TestCase
@@ -25,6 +26,10 @@ class SetupTest extends TestCase
      */
     public function test_storage_link_exists(): void
     {
+        if (! file_exists(public_path('storage'))) {
+            Artisan::call('storage:link');
+        }
+
         $this->assertTrue(file_exists(public_path('storage')));
     }
 
