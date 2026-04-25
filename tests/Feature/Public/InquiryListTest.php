@@ -12,6 +12,13 @@ class InquiryListTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        app()->setLocale('de');
+    }
+
     public function test_guest_can_add_product_to_inquiry_list_from_product_detail_page(): void
     {
         $category = Category::factory()->create();

@@ -14,6 +14,13 @@ class InquiryCheckoutTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        app()->setLocale('de');
+    }
+
     public function test_checkout_route_redirects_to_inquiry_list_when_session_is_empty(): void
     {
         $response = $this->get(route('inquiry.checkout'));

@@ -14,6 +14,13 @@ class InquiriesTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        app()->setLocale('de');
+    }
+
     public function test_guest_cannot_access_inquiries_page(): void
     {
         $response = $this->get(route('admin.inquiries'));
@@ -114,7 +121,7 @@ class InquiriesTest extends TestCase
 
         $this->get(route('admin.inquiries'))
             ->assertOk()
-            ->assertSee('Anfragezeitraum')
+            ->assertSee((string) __('inquiryPeriod'))
             ->assertSee('01.06.2026 - 03.06.2026');
     }
 

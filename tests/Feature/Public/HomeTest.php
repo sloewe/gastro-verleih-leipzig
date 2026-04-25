@@ -14,6 +14,7 @@ class HomeTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+        app()->setLocale('de');
         config(['filesystems.default' => 'public']);
     }
 
