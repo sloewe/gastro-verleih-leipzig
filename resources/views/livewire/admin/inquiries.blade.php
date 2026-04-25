@@ -74,7 +74,7 @@
         </flux:table>
     </div>
 
-    <flux:modal name="inquiry-details-modal" class="max-w-5xl">
+    <flux:modal name="inquiry-details-modal" class="max-w-5xl md:min-w-[48rem]!">
         @if ($selectedInquiry)
             <div class="space-y-5">
                 <div class="flex items-start justify-between gap-4 pr-12">

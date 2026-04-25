@@ -7,10 +7,10 @@
         </flux:heading>
     </section>
 
-    <div class="space-y-6">
+    <div class="space-y-6 content-page-content">
         @foreach ($page->blocks as $block)
             <article class="rounded-apple border border-zinc-200 bg-white p-6 shadow-sm">
-                <div class="prose max-w-none">
+                <div class="max-w-none">
                     {!! \Illuminate\Support\Str::markdown($block->content_markdown ?? '', ['html_input' => 'strip', 'allow_unsafe_links' => false]) !!}
                 </div>
             </article>

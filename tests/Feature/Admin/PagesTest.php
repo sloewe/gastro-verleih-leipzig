@@ -91,4 +91,41 @@ class PagesTest extends TestCase
             $page->blocks()->orderBy('sort_order')->pluck('content_markdown')->all()
         );
     }
+
+    public function test_markdown_headings_are_normalized_when_saving_blocks(): void
+    {
+        Livewire::actingAs($this->user)
+            ->test(Pages::class)
+            ->set('title', 'Impressum')
+            ->set('slug', 'impressum')
+            ->set('blocks', [
+                ['id' => null, 'type' => 'markdown', 'content_markdown' => '#Firmenangaben'],
+            ])
+            ->call('save')
+            ->assertHasNoErrors();
+
+        $page = Page::query()->where('slug', 'impressum')->firstOrFail();
+
+        $this->assertDatabaseHas('page_blocks', [
+            'page_id' => $page->id,
+            'sort_order' => 1,
+            'type' => 'markdown',
+            'content_markdown' => '# Firmenangaben',
+        ]);
+    }
+
+    public function test_editor_modal_is_opened_for_create_and_edit_actions(): void
+    {
+        $page = Page::query()->create([
+            'title' => 'Impressum',
+            'slug' => 'impressum',
+        ]);
+
+        Livewire::actingAs($this->user)
+            ->test(Pages::class)
+            ->call('create')
+            ->assertDispatched('modal-show', name: 'page-editor-modal')
+            ->call('edit', $page->id)
+            ->assertDispatched('modal-show', name: 'page-editor-modal');
+    }
 }

@@ -41,6 +41,7 @@ class Pages extends Component
     {
         $this->resetEditor();
         $this->addBlock();
+        $this->dispatch('modal-show', name: 'page-editor-modal');
     }
 
     public function edit(Page $page): void
@@ -63,6 +64,8 @@ class Pages extends Component
         if ($this->blocks === []) {
             $this->addBlock();
         }
+
+        $this->dispatch('modal-show', name: 'page-editor-modal');
     }
 
     public function delete(Page $page): void
