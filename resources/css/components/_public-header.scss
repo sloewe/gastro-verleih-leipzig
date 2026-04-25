@@ -4,11 +4,11 @@
     }
 
     .public-header__container {
-        @apply flex min-h-16 items-center gap-3;
+        @apply flex min-h-16 items-center gap-3 mx-auto;
     }
 
     .public-header__brand-link {
-        @apply flex items-center gap-2;
+        @apply flex items-center gap-3;
     }
 
     .public-header__brand-title {
