@@ -1,6 +1,6 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "Gastro-Verleih-Leipzig",
+    "name": "gastro-verleih/leipzig",
     "type": "project",
     "description": "Webseite von gastro-verleih-leipzig",
     "keywords": [
