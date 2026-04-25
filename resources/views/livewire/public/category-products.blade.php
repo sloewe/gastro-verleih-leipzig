@@ -49,9 +49,12 @@
                             </flux:text>
 
                             @if ($product->feature_name && ! empty($product->feature_values))
-                                <flux:field>
-                                    <flux:label>{{ $product->feature_name }}</flux:label>
-                                    <flux:select wire:model.live="selectedFeatureValues.{{ $product->id }}">
+                                <flux:field class="min-w-[11rem] [&_[data-flux-control]]:!border-zinc-500 [&_[data-flux-control]]:!bg-zinc-50 [&_[data-flux-control]]:!text-zinc-900">
+                                    <flux:label class="!mb-0 font-medium text-zinc-700">{{ $product->feature_name }}</flux:label>
+                                    <flux:select
+                                        wire:model.live="selectedFeatureValues.{{ $product->id }}"
+                                        class="!border-zinc-500 !bg-zinc-50 !text-zinc-900 has-[option.placeholder:checked]:!text-zinc-600 [&>option]:bg-white [&>option]:text-zinc-900"
+                                    >
                                         <flux:select.option value="">{{ __('pleaseSelect') }}</flux:select.option>
                                         @foreach ($product->feature_values as $featureValue)
                                             <flux:select.option value="{{ $featureValue }}">{{ $featureValue }}</flux:select.option>
@@ -60,9 +63,11 @@
                                 </flux:field>
                             @endif
 
-                            <flux:button wire:click="addToInquiryList({{ $product->id }})" class="btn-primary-inquiry">
-                                {{ __('addToInquiry') }}
-                            </flux:button>
+                            <div class="basis-full">
+                                <flux:button wire:click="addToInquiryList({{ $product->id }})" class="btn-primary-inquiry">
+                                    {{ __('addToInquiry') }}
+                                </flux:button>
+                            </div>
                         </div>
                     </div>
                 </div>
