@@ -131,13 +131,13 @@
 
                 <flux:separator class="col-span-2" text="{{ __('Optionale Merkmale') }}" />
 
-                <flux:field>
+                <flux:field class="col-span-2">
                     <flux:label>{{ __('Merkmal Name') }}</flux:label>
                     <flux:input wire:model="feature_name" placeholder="z.B. Farbe" />
                     <flux:error name="feature_name" />
                 </flux:field>
 
-                <flux:field>
+                <flux:field class="col-span-2">
                     <flux:label>{{ __('Werte (kommagetrennt)') }}</flux:label>
                     <flux:input wire:model="feature_values" placeholder="Schwarz, Weiß, Silber" />
                     <flux:error name="feature_values" />

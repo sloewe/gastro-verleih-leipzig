@@ -1,11 +1,11 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "laravel/livewire-starter-kit",
+    "name": "Gastro-Verleih-Leipzig",
     "type": "project",
-    "description": "The official Laravel starter kit for Livewire.",
+    "description": "Webseite von gastro-verleih-leipzig",
     "keywords": [
-        "laravel",
-        "framework"
+        "Gastro Verleih",
+        "Portal"
     ],
     "license": "MIT",
     "require": {

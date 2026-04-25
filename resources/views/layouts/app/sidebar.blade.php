@@ -5,6 +5,7 @@
     </head>
     <body class="min-h-screen bg-white dark:bg-zinc-800">
         <flux:sidebar sticky collapsible="mobile" class="border-e border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900">
+            @php($sidebarItemClass = 'data-current:!text-zinc-50 data-current:[&_svg]:!text-zinc-50 data-current:hover:!text-zinc-50 data-current:hover:[&_svg]:!text-zinc-50')
             <flux:sidebar.header>
                 <x-app-logo :sidebar="true" href="{{ route('dashboard') }}" wire:navigate />
                 <flux:sidebar.collapse class="lg:hidden" />
@@ -12,25 +13,25 @@
 
             <flux:sidebar.nav>
                 <flux:sidebar.group :heading="__('Platform')" class="grid">
-                    <flux:sidebar.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>
+                    <flux:sidebar.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" class="{{ $sidebarItemClass }}" wire:navigate>
                         {{ __('Dashboard') }}
                     </flux:sidebar.item>
                 </flux:sidebar.group>
 
                 <flux:sidebar.group :heading="__('Verwaltung')" class="grid">
-                    <flux:sidebar.item icon="layout-grid" :href="route('admin.categories')" :current="request()->routeIs('admin.categories')" wire:navigate>
+                    <flux:sidebar.item icon="layout-grid" :href="route('admin.categories')" :current="request()->routeIs('admin.categories')" class="{{ $sidebarItemClass }}" wire:navigate>
                         {{ __('Kategorien') }}
                     </flux:sidebar.item>
-                    <flux:sidebar.item icon="layout-grid" :href="route('admin.products')" :current="request()->routeIs('admin.products')" wire:navigate>
+                    <flux:sidebar.item icon="layout-grid" :href="route('admin.products')" :current="request()->routeIs('admin.products')" class="{{ $sidebarItemClass }}" wire:navigate>
                         {{ __('Produkte') }}
                     </flux:sidebar.item>
-                    <flux:sidebar.item icon="inbox" :href="route('admin.inquiries')" :current="request()->routeIs('admin.inquiries')" wire:navigate>
+                    <flux:sidebar.item icon="inbox" :href="route('admin.inquiries')" :current="request()->routeIs('admin.inquiries')" class="{{ $sidebarItemClass }}" wire:navigate>
                         {{ __('Anfragen') }}
                     </flux:sidebar.item>
-                    <flux:sidebar.item icon="users" :href="route('admin.users')" :current="request()->routeIs('admin.users')" wire:navigate>
+                    <flux:sidebar.item icon="users" :href="route('admin.users')" :current="request()->routeIs('admin.users')" class="{{ $sidebarItemClass }}" wire:navigate>
                         {{ __('Benutzer') }}
                     </flux:sidebar.item>
-                    <flux:sidebar.item icon="document-text" :href="route('admin.pages')" :current="request()->routeIs('admin.pages')" wire:navigate>
+                    <flux:sidebar.item icon="document-text" :href="route('admin.pages')" :current="request()->routeIs('admin.pages')" class="{{ $sidebarItemClass }}" wire:navigate>
                         {{ __('Seiten') }}
                     </flux:sidebar.item>
                 </flux:sidebar.group>
