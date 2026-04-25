@@ -32,6 +32,7 @@ class ProductPagesTest extends TestCase
             ->assertSee('Medientechnik')
             ->assertSee('Samsung Display QM98F')
             ->assertSee(route('product.show', $product->slug), false)
+            ->assertSee(__('details'))
             ->assertSee(__('addToInquiry'));
     }
 

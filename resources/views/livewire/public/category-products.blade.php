@@ -31,7 +31,7 @@
                     <div class="flex h-full flex-col justify-between gap-4">
                         <div class="space-y-2">
                             <a href="{{ route('product.show', $product->slug) }}">
-                                <flux:heading size="lg" level="2" class="hover:text-gtc-green transition-colors">
+                                <flux:heading size="lg" level="2" class="text-zinc-900 transition-colors hover:text-gtc-green">
                                     {{ $product->name }}
                                 </flux:heading>
                             </a>
@@ -63,7 +63,15 @@
                                 </flux:field>
                             @endif
 
-                            <div class="basis-full flex justify-end">
+                            <div class="basis-full flex justify-end gap-2">
+                                <flux:button
+                                    :href="route('product.show', $product->slug)"
+                                    variant="ghost"
+                                    class="!text-zinc-900 hover:!text-zinc-950 active:!text-zinc-950 !bg-zinc-100 hover:!bg-zinc-200 active:!bg-zinc-300"
+                                    wire:navigate
+                                >
+                                    {{ __('details') }}
+                                </flux:button>
                                 <flux:button wire:click="addToInquiryList({{ $product->id }})" class="btn-primary-inquiry">
                                     {{ __('addToInquiry') }}
                                 </flux:button>
