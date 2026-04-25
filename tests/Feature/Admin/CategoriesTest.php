@@ -4,6 +4,7 @@ namespace Tests\Feature\Admin;
 
 use App\Livewire\Admin\Categories;
 use App\Models\Category;
+use App\Models\Product;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
@@ -89,6 +90,22 @@ class CategoriesTest extends TestCase
             ->assertDispatched('modal-close', name: 'delete-confirmation');
 
         $this->assertDatabaseMissing('categories', [
+            'id' => $category->id,
+        ]);
+    }
+
+    public function test_cannot_delete_category_when_products_are_assigned(): void
+    {
+        $category = Category::factory()->create();
+        Product::factory()->create(['category_id' => $category->id]);
+
+        Livewire::actingAs($this->user)
+            ->test(Categories::class)
+            ->call('delete', $category->id)
+            ->call('confirmDelete')
+            ->assertDispatched('modal-close', name: 'delete-confirmation');
+
+        $this->assertDatabaseHas('categories', [
             'id' => $category->id,
         ]);
     }

@@ -92,6 +92,15 @@ class Categories extends Component
 
     public function confirmDelete()
     {
+        if ($this->category->products()->exists()) {
+            Flux::toast(__('Kategorie kann nicht gelöscht werden, solange Produkte zugeordnet sind.'));
+
+            $this->dispatch('modal-close', name: 'delete-confirmation');
+            $this->reset(['category']);
+
+            return;
+        }
+
         if ($this->category->image_path) {
             Storage::disk('public')->delete($this->category->image_path);
         }
