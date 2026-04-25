@@ -91,4 +91,26 @@ class InquiriesTest extends TestCase
             'status' => 'quote_created',
         ]);
     }
+
+    public function test_inquiry_query_parameter_preselects_detail_panel(): void
+    {
+        $this->actingAs(User::factory()->create());
+
+        $olderInquiry = Inquiry::factory()->create([
+            'first_name' => 'Anna',
+            'last_name' => 'Alt',
+            'created_at' => now()->subDay(),
+        ]);
+        Inquiry::factory()->create([
+            'first_name' => 'Ben',
+            'last_name' => 'Neu',
+            'created_at' => now(),
+        ]);
+
+        Livewire::withQueryParams(['inquiry' => $olderInquiry->id])
+            ->test(Inquiries::class)
+            ->assertSet('selectedInquiryId', $olderInquiry->id)
+            ->assertSee('Anfrage #'.$olderInquiry->id)
+            ->assertSee('Anna Alt');
+    }
 }

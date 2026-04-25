@@ -51,6 +51,7 @@
                     <flux:table.cell>{{ number_format($product->price, 2, ',', '.') }} €</flux:table.cell>
                     <flux:table.cell>{{ $product->created_at->format('d.m.Y') }}</flux:table.cell>
                     <flux:table.cell class="flex justify-end space-x-2">
+                        <flux:button wire:click="showInquiries({{ $product->id }})" variant="ghost" size="sm" icon="document-text" />
                         <flux:button wire:click="edit({{ $product->id }})" variant="ghost" size="sm" icon="pencil-square" />
                         <flux:button wire:click="delete({{ $product->id }})" variant="ghost" size="sm" icon="trash" class="text-red-500 hover:text-red-600" />
                     </flux:table.cell>
@@ -165,6 +166,69 @@
                     <flux:button variant="ghost">{{ __('Abbrechen') }}</flux:button>
                 </flux:modal.close>
                 <flux:button wire:click="confirmDelete" variant="danger">{{ __('Löschen') }}</flux:button>
+            </div>
+        </div>
+    </flux:modal>
+
+    <flux:modal name="product-inquiries-modal" class="min-w-[42rem]">
+        <div class="space-y-5">
+            <div>
+                <flux:heading size="lg">{{ __('Anfragen zum Produkt') }}</flux:heading>
+                @if ($inquiryHistoryProduct)
+                    <flux:subheading>
+                        {{ __(':name (ID: :id)', ['name' => $inquiryHistoryProduct->name, 'id' => $inquiryHistoryProduct->id]) }}
+                    </flux:subheading>
+                @endif
+            </div>
+
+            @if ($productInquiries !== [])
+                <div class="max-h-[24rem] overflow-y-auto rounded-md border border-zinc-200 dark:border-zinc-700">
+                    <table class="min-w-full divide-y divide-zinc-200 text-sm dark:divide-zinc-700">
+                        <thead class="bg-zinc-50 dark:bg-zinc-900/50">
+                            <tr>
+                                <th class="px-4 py-3 text-left font-medium text-zinc-600 dark:text-zinc-300">{{ __('Datum') }}</th>
+                                <th class="px-4 py-3 text-left font-medium text-zinc-600 dark:text-zinc-300">{{ __('Kunde') }}</th>
+                                <th class="px-4 py-3 text-left font-medium text-zinc-600 dark:text-zinc-300">{{ __('Menge') }}</th>
+                                <th class="px-4 py-3 text-right font-medium text-zinc-600 dark:text-zinc-300">{{ __('Aktion') }}</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-zinc-100 dark:divide-zinc-800">
+                            @foreach ($productInquiries as $inquiry)
+                                <tr wire:key="product-inquiry-history-{{ $inquiry['inquiry_id'] }}-{{ $loop->index }}">
+                                    <td class="px-4 py-3">
+                                        <div>{{ $inquiry['inquiry_date'] }}</div>
+                                        <div class="text-xs text-zinc-500">{{ __('Anfrage #:id', ['id' => $inquiry['inquiry_id']]) }}</div>
+                                    </td>
+                                    <td class="px-4 py-3">
+                                        <div>{{ $inquiry['customer_name'] }}</div>
+                                        @if ($inquiry['customer_company'])
+                                            <div class="text-xs text-zinc-500">{{ $inquiry['customer_company'] }}</div>
+                                        @endif
+                                    </td>
+                                    <td class="px-4 py-3">{{ $inquiry['quantity'] }}</td>
+                                    <td class="px-4 py-3 text-right">
+                                        <flux:modal.close>
+                                            <a
+                                                href="{{ route('admin.inquiries', ['inquiry' => $inquiry['inquiry_id']]) }}"
+                                                class="inline-flex items-center text-sm font-medium text-zinc-700 hover:text-zinc-900 dark:text-zinc-200 dark:hover:text-zinc-100"
+                                            >
+                                                {{ __('Zur Anfrage') }}
+                                            </a>
+                                        </flux:modal.close>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            @else
+                <flux:text>{{ __('Keine Anfragen für dieses Produkt vorhanden.') }}</flux:text>
+            @endif
+
+            <div class="flex justify-end">
+                <flux:modal.close>
+                    <flux:button variant="ghost">{{ __('Schließen') }}</flux:button>
+                </flux:modal.close>
             </div>
         </div>
     </flux:modal>

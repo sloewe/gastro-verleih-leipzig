@@ -3,6 +3,7 @@
 namespace App\Livewire\Admin;
 
 use App\Models\Category;
+use App\Models\InquiryItem;
 use App\Models\Product;
 use Flux\Flux;
 use Illuminate\Support\Facades\DB;
@@ -45,6 +46,19 @@ class Products extends Component
     public $feature_values = '';
 
     public $editing = false;
+
+    public ?Product $inquiryHistoryProduct = null;
+
+    /**
+     * @var array<int, array{
+     *     inquiry_id: int,
+     *     inquiry_date: string,
+     *     customer_name: string,
+     *     customer_company: ?string,
+     *     quantity: int
+     * }>
+     */
+    public array $productInquiries = [];
 
     public function updatedName($value)
     {
@@ -154,6 +168,37 @@ class Products extends Component
         $this->dispatch('modal-show', name: 'delete-confirmation');
     }
 
+    public function showInquiries(Product $product): void
+    {
+        $this->inquiryHistoryProduct = $product;
+
+        $productIds = $this->resolveProductFamilyIds($product->id);
+
+        $this->productInquiries = InquiryItem::query()
+            ->with('inquiry')
+            ->whereIn('product_id', $productIds)
+            ->get()
+            ->sortByDesc(fn (InquiryItem $inquiryItem): int => $inquiryItem->inquiry?->created_at?->getTimestamp() ?? 0)
+            ->map(function (InquiryItem $inquiryItem): ?array {
+                if ($inquiryItem->inquiry === null) {
+                    return null;
+                }
+
+                return [
+                    'inquiry_id' => $inquiryItem->inquiry->id,
+                    'inquiry_date' => $inquiryItem->inquiry->created_at->format('d.m.Y H:i'),
+                    'customer_name' => $this->formatCustomerName($inquiryItem->inquiry->first_name, $inquiryItem->inquiry->last_name),
+                    'customer_company' => $inquiryItem->inquiry->company,
+                    'quantity' => (int) $inquiryItem->quantity,
+                ];
+            })
+            ->filter()
+            ->values()
+            ->all();
+
+        $this->dispatch('modal-show', name: 'product-inquiries-modal');
+    }
+
     public function confirmDelete()
     {
         if ($this->product->image_path && ! $this->product->inquiries()->exists()) {
@@ -188,5 +233,45 @@ class Products extends Component
     private function archivedSlug(string $slug, int $productId): string
     {
         return Str::limit($slug.'-archived-'.$productId, 255, '');
+    }
+
+    /**
+     * @return array<int, int>
+     */
+    private function resolveProductFamilyIds(int $productId): array
+    {
+        $productIds = [$productId];
+        $uncheckedIds = [$productId];
+
+        while ($uncheckedIds !== []) {
+            $relatedProductIds = Product::withTrashed()
+                ->whereIn('id', $uncheckedIds)
+                ->orWhereIn('supersedes_product_id', $uncheckedIds)
+                ->pluck('id')
+                ->merge(
+                    Product::withTrashed()
+                        ->whereIn('id', $uncheckedIds)
+                        ->pluck('supersedes_product_id')
+                )
+                ->filter(fn ($id): bool => $id !== null)
+                ->map(fn ($id): int => (int) $id)
+                ->unique()
+                ->values();
+
+            $newIds = $relatedProductIds
+                ->diff($productIds)
+                ->values()
+                ->all();
+
+            $productIds = array_values(array_unique(array_merge($productIds, $newIds)));
+            $uncheckedIds = $newIds;
+        }
+
+        return $productIds;
+    }
+
+    private function formatCustomerName(string $firstName, string $lastName): string
+    {
+        return trim($firstName.' '.$lastName);
     }
 }

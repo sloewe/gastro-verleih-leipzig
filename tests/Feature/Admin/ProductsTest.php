@@ -153,4 +153,56 @@ class ProductsTest extends TestCase
             'quantity' => 2,
         ]);
     }
+
+    public function test_show_inquiries_includes_current_and_previous_product_versions()
+    {
+        $category = Category::factory()->create();
+        $previousVersion = Product::factory()->create([
+            'category_id' => $category->id,
+            'name' => 'Produkt v1',
+            'slug' => 'produkt-v1',
+        ]);
+        $currentVersion = Product::factory()->create([
+            'category_id' => $category->id,
+            'name' => 'Produkt v2',
+            'slug' => 'produkt-v2',
+            'supersedes_product_id' => $previousVersion->id,
+        ]);
+
+        $previousVersion->delete();
+
+        $oldInquiry = Inquiry::factory()->create([
+            'first_name' => 'Anna',
+            'last_name' => 'Alt',
+            'company' => 'Alt GmbH',
+            'created_at' => now()->subDays(2),
+        ]);
+        $oldInquiry->products()->attach($previousVersion->id, [
+            'quantity' => 3,
+            'feature_value' => null,
+        ]);
+
+        $newInquiry = Inquiry::factory()->create([
+            'first_name' => 'Ben',
+            'last_name' => 'Neu',
+            'company' => 'Neu AG',
+            'created_at' => now()->subDay(),
+        ]);
+        $newInquiry->products()->attach($currentVersion->id, [
+            'quantity' => 1,
+            'feature_value' => null,
+        ]);
+
+        Livewire::test('admin.products')
+            ->call('showInquiries', $currentVersion->id)
+            ->assertSet('inquiryHistoryProduct.id', $currentVersion->id)
+            ->assertSet('productInquiries.0.inquiry_id', $newInquiry->id)
+            ->assertSet('productInquiries.0.quantity', 1)
+            ->assertSet('productInquiries.1.inquiry_id', $oldInquiry->id)
+            ->assertSet('productInquiries.1.quantity', 3)
+            ->assertSee(route('admin.inquiries', ['inquiry' => $newInquiry->id]))
+            ->assertSee(route('admin.inquiries', ['inquiry' => $oldInquiry->id]))
+            ->assertSee('Ben Neu')
+            ->assertSee('Anna Alt');
+    }
 }

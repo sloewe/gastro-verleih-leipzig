@@ -6,6 +6,7 @@ use App\Models\Inquiry;
 use Flux\Flux;
 use Illuminate\Validation\Rule;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -17,6 +18,7 @@ class Inquiries extends Component
 
     public string $statusFilter = '';
 
+    #[Url(as: 'inquiry')]
     public ?int $selectedInquiryId = null;
 
     /**
@@ -32,7 +34,17 @@ class Inquiries extends Component
 
     public function mount(): void
     {
-        $this->selectedInquiryId = Inquiry::query()->latest('created_at')->value('id');
+        if ($this->selectedInquiryId !== null) {
+            $inquiryExists = Inquiry::query()->whereKey($this->selectedInquiryId)->exists();
+
+            if (! $inquiryExists) {
+                $this->selectedInquiryId = null;
+            }
+        }
+
+        if ($this->selectedInquiryId === null) {
+            $this->selectedInquiryId = Inquiry::query()->latest('created_at')->value('id');
+        }
     }
 
     public function updatingSearch(): void
