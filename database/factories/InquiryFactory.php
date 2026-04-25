@@ -18,6 +18,7 @@ class InquiryFactory extends Factory
     public function definition(): array
     {
         return [
+            'salutation' => $this->faker->randomElement(['Herr', 'Frau']),
             'first_name' => $this->faker->firstName(),
             'last_name' => $this->faker->lastName(),
             'email' => $this->faker->unique()->safeEmail(),
@@ -25,6 +26,9 @@ class InquiryFactory extends Factory
             'message' => $this->faker->text(),
             'company' => $this->faker->company(),
             'address' => $this->faker->address(),
+            'street' => $this->faker->streetAddress(),
+            'postal_code' => $this->faker->postcode(),
+            'city' => $this->faker->city(),
             'status' => $this->faker->randomElement(['new', 'in_progress', 'completed']),
         ];
     }

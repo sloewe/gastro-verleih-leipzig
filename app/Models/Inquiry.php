@@ -13,6 +13,7 @@ class Inquiry extends Model
     use HasFactory;
 
     protected $fillable = [
+        'salutation',
         'first_name',
         'last_name',
         'email',
@@ -20,6 +21,9 @@ class Inquiry extends Model
         'message',
         'company',
         'address',
+        'street',
+        'postal_code',
+        'city',
         'status',
     ];
 
@@ -29,7 +33,7 @@ class Inquiry extends Model
     public function products(): BelongsToMany
     {
         return $this->belongsToMany(Product::class, 'inquiry_items')
-            ->withPivot('quantity')
+            ->withPivot('quantity', 'feature_value')
             ->withTimestamps();
     }
 }

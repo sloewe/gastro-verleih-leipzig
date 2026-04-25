@@ -37,3 +37,20 @@
 .btn-primary-inquiry:active {
     transform: translateY(1px);
 }
+
+.inquiry-checkout-form {
+    :where(label, [data-flux-label]) {
+        color: var(--color-gtc-ink) !important;
+    }
+
+    :where(input, select, textarea, [role='combobox']) {
+        color: var(--color-gtc-ink) !important;
+        border-color: #d4d4d8 !important;
+        background-color: #fff !important;
+    }
+
+    :where(input, textarea)::placeholder {
+        color: #71717a !important;
+        opacity: 1;
+    }
+}

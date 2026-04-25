@@ -1,7 +1,7 @@
 # Task 09: Öffentlicher Bereich - Anfrage-Formular (Checkout)
 
 ## Ziel
-Erfassung der Kontaktdaten und Absenden der unverbindlichen Anfrage.
+Erfassung der Kontaktdaten und Absenden der Anfrage.
 
 ## Anforderungen
 - Route: `/anfrage-absenden` oder Integration in `/anfrageliste`.

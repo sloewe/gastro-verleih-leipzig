@@ -1,6 +1,12 @@
 <div class="space-y-8">
     <x-slot:title>{{ __('Anfrageliste') }}</x-slot:title>
 
+    @if (session()->has('checkout_error'))
+        <div class="rounded-xl border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+            {{ session('checkout_error') }}
+        </div>
+    @endif
+
     <section class="space-y-3">
         <flux:subheading size="sm" class="uppercase tracking-wider text-gtc-muted">
             {{ __('Anfrage') }}
@@ -136,7 +142,7 @@
                         {{ __('Einkauf fortsetzen') }}
                     </flux:button>
 
-                    <flux:button variant="primary" class="w-full">
+                    <flux:button :href="route('inquiry.checkout')" variant="primary" class="w-full">
                         {{ __('Weiter zur Anfrage') }}
                     </flux:button>
                 </div>

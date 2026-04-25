@@ -47,7 +47,7 @@ class Product extends Model
     public function inquiries(): BelongsToMany
     {
         return $this->belongsToMany(Inquiry::class, 'inquiry_items')
-            ->withPivot('quantity')
+            ->withPivot('quantity', 'feature_value')
             ->withTimestamps();
     }
 }

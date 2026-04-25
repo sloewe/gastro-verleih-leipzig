@@ -12,6 +12,7 @@ class InquiryItem extends Pivot
     protected $fillable = [
         'inquiry_id',
         'product_id',
+        'feature_value',
         'quantity',
     ];
 
