@@ -31,7 +31,7 @@ class InquiryCustomerConfirmationMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.inquiry-customer-confirmation',
+            markdown: 'emails.inquiry-customer-confirmation',
         );
     }
 }

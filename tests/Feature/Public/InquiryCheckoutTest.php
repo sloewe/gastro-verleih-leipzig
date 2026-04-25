@@ -130,8 +130,22 @@ class InquiryCheckoutTest extends TestCase
             'feature_value' => 'Wochenende',
         ]);
 
-        Mail::assertSent(InquiryCustomerConfirmationMail::class);
-        Mail::assertSent(InquiryAdminNotificationMail::class);
+        Mail::assertSent(InquiryCustomerConfirmationMail::class, function (InquiryCustomerConfirmationMail $mail): bool {
+            $renderedHtml = $mail->render();
+
+            return str_contains($renderedHtml, 'class="wrapper"')
+                && str_contains($renderedHtml, 'vielen Dank fuer Ihre Anfrage')
+                && str_contains($renderedHtml, 'Kuehlschrank')
+                && str_contains($renderedHtml, 'Menge: 2');
+        });
+        Mail::assertSent(InquiryAdminNotificationMail::class, function (InquiryAdminNotificationMail $mail): bool {
+            $renderedHtml = $mail->render();
+
+            return str_contains($renderedHtml, 'class="wrapper"')
+                && str_contains($renderedHtml, 'Angefragte Produkte')
+                && str_contains($renderedHtml, 'Kuehlschrank')
+                && str_contains($renderedHtml, 'Menge: 2');
+        });
 
         $this->assertSame([], session('inquiry_list.items', []));
     }

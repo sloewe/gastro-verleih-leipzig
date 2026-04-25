@@ -1,23 +1,18 @@
-<p>Neue Anfrage von {{ $inquiry->first_name }} {{ $inquiry->last_name }}.</p>
+<x-mail::message>
+# Neue Anfrage von {{ $inquiry->first_name }} {{ $inquiry->last_name }}
 
-<p>
-    E-Mail: {{ $inquiry->email }}<br>
-    Telefon: {{ $inquiry->phone ?: '-' }}<br>
-    Firma: {{ $inquiry->company ?: '-' }}<br>
-    Adresse: {{ $inquiry->street }}, {{ $inquiry->postal_code }} {{ $inquiry->city }}
-</p>
+**E-Mail:** {{ $inquiry->email }}  
+**Telefon:** {{ $inquiry->phone ?: '-' }}  
+**Firma:** {{ $inquiry->company ?: '-' }}  
+**Adresse:** {{ $inquiry->street }}, {{ $inquiry->postal_code }} {{ $inquiry->city }}
 
 @if ($inquiry->message)
-    <p>Nachricht: {{ $inquiry->message }}</p>
-@endif
+**Nachricht:** {{ $inquiry->message }}
 
-<ul>
-    @foreach ($inquiry->products as $product)
-        <li>
-            {{ $product->name }} - Menge: {{ $product->pivot->quantity }}
-            @if ($product->pivot->feature_value)
-                ({{ $product->pivot->feature_value }})
-            @endif
-        </li>
-    @endforeach
-</ul>
+@endif
+## Angefragte Produkte
+
+@foreach ($inquiry->products as $product)
+- {{ $product->name }} - Menge: {{ $product->pivot->quantity }}@if ($product->pivot->feature_value) ({{ $product->pivot->feature_value }})@endif
+@endforeach
+</x-mail::message>
