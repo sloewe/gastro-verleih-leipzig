@@ -116,16 +116,33 @@ class InquiryList extends Component
     }
 
     /**
-     * @return array{subtotal_net: float, vat_total: float, grand_total: float}
+     * @return array{
+     *     subtotal_net: float,
+     *     vat_total: float,
+     *     grand_total: float,
+     *     vat_breakdown: list<array{rate: float, amount: float}>
+     * }
      */
     public function getSummaryProperty(): array
     {
         $items = Collection::make($this->items());
+        $vatBreakdown = $items
+            ->groupBy(fn (array $item): string => (string) $item['vat_rate'])
+            ->map(function (Collection $groupedItems, string $rate): array {
+                return [
+                    'rate' => (float) $rate,
+                    'amount' => (float) $groupedItems->sum('line_vat'),
+                ];
+            })
+            ->sortByDesc('rate')
+            ->values()
+            ->all();
 
         return [
             'subtotal_net' => (float) $items->sum('line_net'),
             'vat_total' => (float) $items->sum('line_vat'),
             'grand_total' => (float) $items->sum('line_gross'),
+            'vat_breakdown' => $vatBreakdown,
         ];
     }
 

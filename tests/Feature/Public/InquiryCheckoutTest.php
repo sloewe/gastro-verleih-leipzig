@@ -165,30 +165,42 @@ class InquiryCheckoutTest extends TestCase
         $this->assertDatabaseCount('inquiries', 0);
     }
 
-    public function test_checkout_displays_net_vat_and_gross_amounts_in_sidebar(): void
+    public function test_checkout_displays_net_grouped_vat_and_gross_amounts_in_sidebar(): void
     {
-        $product = Product::factory()->create([
+        $standardVatProduct = Product::factory()->create([
             'price' => 10.00,
             'vat_rate' => 19.00,
+        ]);
+        $reducedVatProduct = Product::factory()->create([
+            'price' => 20.00,
+            'vat_rate' => 7.00,
         ]);
 
         $response = $this->withSession([
             'inquiry_list.items' => [
                 [
-                    'key' => $product->id.'|',
-                    'product_id' => $product->id,
+                    'key' => $standardVatProduct->id.'|',
+                    'product_id' => $standardVatProduct->id,
                     'feature_value' => '',
                     'quantity' => 2,
+                ],
+                [
+                    'key' => $reducedVatProduct->id.'|',
+                    'product_id' => $reducedVatProduct->id,
+                    'feature_value' => '',
+                    'quantity' => 1,
                 ],
             ],
         ])->get(route('inquiry.checkout'));
 
         $response
             ->assertOk()
-            ->assertSee('20,00 €')
+            ->assertSee('40,00 €')
+            ->assertSee('Mehrwertsteuer 19%')
             ->assertSee('3,80 €')
-            ->assertSee('23,80 €')
-            ->assertSee('Mehrwertsteuer')
+            ->assertSee('Mehrwertsteuer 7%')
+            ->assertSee('1,40 €')
+            ->assertSee('45,20 €')
             ->assertSee('Bruttosumme');
     }
 

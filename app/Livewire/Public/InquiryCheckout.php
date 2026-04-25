@@ -140,18 +140,35 @@ class InquiryCheckout extends Component
     }
 
     /**
-     * @return array{subtotal_net: float, subtotal_vat: float, subtotal_gross: float}
+     * @return array{
+     *     subtotal_net: float,
+     *     subtotal_vat: float,
+     *     subtotal_gross: float,
+     *     vat_breakdown: list<array{rate: float, amount: float}>
+     * }
      */
     public function getSummaryProperty(): array
     {
         $resolvedItems = collect($this->resolvedSessionItems());
         $subtotalNet = (float) $resolvedItems->sum('line_net');
         $subtotalVat = (float) $resolvedItems->sum('line_vat');
+        $vatBreakdown = $resolvedItems
+            ->groupBy(fn (array $item): string => (string) $item['vat_rate'])
+            ->map(function ($items, string $rate): array {
+                return [
+                    'rate' => (float) $rate,
+                    'amount' => (float) collect($items)->sum('line_vat'),
+                ];
+            })
+            ->sortByDesc('rate')
+            ->values()
+            ->all();
 
         return [
             'subtotal_net' => $subtotalNet,
             'subtotal_vat' => $subtotalVat,
             'subtotal_gross' => $subtotalNet + $subtotalVat,
+            'vat_breakdown' => $vatBreakdown,
         ];
     }
 

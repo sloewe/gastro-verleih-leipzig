@@ -180,7 +180,10 @@ class InquiryListTest extends TestCase
             ->assertOk()
             ->assertSee('Nettopreis')
             ->assertSee('200,00 €')
-            ->assertSee('26,00 €')
+            ->assertSee('MwSt. 19%')
+            ->assertSee('19,00 €')
+            ->assertSee('MwSt. 7%')
+            ->assertSee('7,00 €')
             ->assertSee('226,00 €');
     }
 

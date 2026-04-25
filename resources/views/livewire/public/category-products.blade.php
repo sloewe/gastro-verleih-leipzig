@@ -63,7 +63,7 @@
                                 </flux:field>
                             @endif
 
-                            <div class="basis-full">
+                            <div class="basis-full flex justify-end">
                                 <flux:button wire:click="addToInquiryList({{ $product->id }})" class="btn-primary-inquiry">
                                     {{ __('addToInquiry') }}
                                 </flux:button>

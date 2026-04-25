@@ -124,9 +124,15 @@
                         <flux:text class="text-sm font-semibold text-gtc-ink">{{ number_format($summary['subtotal_net'], 2, ',', '.') }} €</flux:text>
                     </div>
 
-                    <div class="flex items-center justify-between gap-4 border-b border-zinc-200 pb-2">
-                        <flux:text class="text-sm text-gtc-muted">{{ __('vat') }}</flux:text>
-                        <flux:text class="text-sm font-semibold text-gtc-ink">{{ number_format($summary['vat_total'], 2, ',', '.') }} €</flux:text>
+                    <div class="space-y-1 border-b border-zinc-200 pb-2">
+                        @foreach ($summary['vat_breakdown'] as $vatLine)
+                            <div class="flex items-center justify-between gap-4">
+                                <flux:text class="text-sm text-gtc-muted">
+                                    {{ __('vat') }} {{ rtrim(rtrim(number_format($vatLine['rate'], 2, ',', '.'), '0'), ',') }}%
+                                </flux:text>
+                                <flux:text class="text-sm font-semibold text-gtc-ink">{{ number_format($vatLine['amount'], 2, ',', '.') }} €</flux:text>
+                            </div>
+                        @endforeach
                     </div>
 
                     <div class="flex items-center justify-between gap-4 pt-1">
