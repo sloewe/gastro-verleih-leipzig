@@ -1,22 +1,22 @@
 <div class="space-y-6">
     <div>
         <flux:heading size="xl" level="1">{{ __('Dashboard') }}</flux:heading>
-        <flux:subheading>{{ __('Operativer Ueberblick zu Anfragen, Produkten und Umsatzentwicklung.') }}</flux:subheading>
+        <flux:subheading>{{ __('operationalOverviewOfInquiriesProductsAndRevenueDevelopment') }}</flux:subheading>
     </div>
 
     <div class="grid gap-4 md:grid-cols-3">
         <div class="rounded-lg border border-zinc-200 p-4 text-zinc-700 dark:border-zinc-700 dark:text-zinc-200">
-            <flux:text class="text-zinc-500">{{ __('Neue Anfragen (24h)') }}</flux:text>
+            <flux:text class="text-zinc-500">{{ __('newInquiries24h') }}</flux:text>
             <flux:heading size="xl" class="mt-2">{{ number_format($metrics['newInquiries24h'], 0, ',', '.') }}</flux:heading>
         </div>
 
         <div class="rounded-lg border border-zinc-200 p-4 text-zinc-700 dark:border-zinc-700 dark:text-zinc-200">
-            <flux:text class="text-zinc-500">{{ __('Aktive Anfragen') }}</flux:text>
+            <flux:text class="text-zinc-500">{{ __('activeInquiries') }}</flux:text>
             <flux:heading size="xl" class="mt-2">{{ number_format($metrics['activeInquiryCount'], 0, ',', '.') }}</flux:heading>
         </div>
 
         <div class="rounded-lg border border-zinc-200 p-4 text-zinc-700 dark:border-zinc-700 dark:text-zinc-200">
-            <flux:text class="text-zinc-500">{{ __('Umsatz (Monat)') }}</flux:text>
+            <flux:text class="text-zinc-500">{{ __('revenueMonth') }}</flux:text>
             <flux:heading size="xl" class="mt-2">{{ number_format($metrics['revenueMonth'], 2, ',', '.') }} EUR</flux:heading>
         </div>
     </div>
@@ -24,9 +24,9 @@
     <div class="grid gap-6 xl:grid-cols-2">
         <div class="rounded-lg border border-zinc-200 p-5 text-zinc-700 dark:border-zinc-700 dark:text-zinc-200">
             <div class="mb-4 flex items-center justify-between gap-2">
-                <flux:heading size="lg">{{ __('Neueste Anfragen') }}</flux:heading>
+                <flux:heading size="lg">{{ __('latestInquiries') }}</flux:heading>
                 <flux:button variant="ghost" size="sm" :href="route('admin.inquiries')">
-                    {{ __('Alle anzeigen') }}
+                    {{ __('viewAll') }}
                 </flux:button>
             </div>
 
@@ -38,19 +38,19 @@
                             <div class="text-xs text-zinc-500">{{ $inquiry->created_at->format('d.m.Y H:i') }}</div>
                         </div>
                         <div class="text-right">
-                            <div class="text-xs text-zinc-500">{{ __('Positionen') }}: {{ $inquiry->products_count }}</div>
+                            <div class="text-xs text-zinc-500">{{ __('items') }}: {{ $inquiry->products_count }}</div>
                             <flux:badge size="sm">{{ __($this->statusLabel($inquiry->status)) }}</flux:badge>
                         </div>
                     </div>
                 @empty
-                    <flux:text>{{ __('Noch keine Anfragen vorhanden.') }}</flux:text>
+                    <flux:text>{{ __('noInquiriesAvailableYet') }}</flux:text>
                 @endforelse
             </div>
         </div>
 
         <div class="grid gap-6 xl:grid-rows-2">
             <div class="rounded-lg border border-zinc-200 p-5 text-zinc-700 dark:border-zinc-700 dark:text-zinc-200">
-                <flux:heading size="lg">{{ __('Aktive Anfragen nach Status') }}</flux:heading>
+                <flux:heading size="lg">{{ __('activeInquiriesByStatus') }}</flux:heading>
 
                 <div class="mt-4 space-y-3">
                     @foreach ($this->statusLabels() as $status => $label)
@@ -74,20 +74,20 @@
             </div>
 
             <div class="rounded-lg border border-zinc-200 p-5 text-zinc-700 dark:border-zinc-700 dark:text-zinc-200">
-                <flux:heading size="lg">{{ __('Sortiment-Impulse') }}</flux:heading>
+                <flux:heading size="lg">{{ __('assortmentInsights') }}</flux:heading>
                 <div class="mt-4 rounded-md border border-zinc-200 p-3 text-zinc-700 dark:border-zinc-700 dark:text-zinc-200">
-                    <flux:text size="sm" class="text-zinc-500">{{ __('Produkte ohne Nachfrage (90 Tage)') }}</flux:text>
+                    <flux:text size="sm" class="text-zinc-500">{{ __('productsWithoutDemand90Days') }}</flux:text>
                     <div class="mt-2 flex flex-wrap gap-2">
                         @forelse ($metrics['inactiveProducts'] as $productName)
                             <flux:badge>{{ $productName }}</flux:badge>
                         @empty
-                            <flux:text>{{ __('Alle Produkte hatten Nachfrage in den letzten 90 Tagen.') }}</flux:text>
+                            <flux:text>{{ __('allProductsHadDemandInTheLast90Days') }}</flux:text>
                         @endforelse
                     </div>
                 </div>
 
                 <div class="mt-3 rounded-md border border-zinc-200 p-3 text-zinc-700 dark:border-zinc-700 dark:text-zinc-200">
-                    <flux:text size="sm" class="text-zinc-500">{{ __('Offenes Angebotsvolumen') }}</flux:text>
+                    <flux:text size="sm" class="text-zinc-500">{{ __('openQuoteVolume') }}</flux:text>
                     <flux:heading size="lg">{{ number_format($metrics['openQuoteVolume'], 2, ',', '.') }} EUR</flux:heading>
                 </div>
             </div>
@@ -96,7 +96,7 @@
 
     <div class="grid gap-6 xl:grid-cols-2">
         <div class="rounded-lg border border-zinc-200 p-5 text-zinc-700 dark:border-zinc-700 dark:text-zinc-200">
-            <flux:heading size="lg">{{ __('Anfragen pro Monat (12 Monate)') }}</flux:heading>
+            <flux:heading size="lg">{{ __('inquiriesPerMonth12Months') }}</flux:heading>
 
             <div class="mt-4 space-y-2">
                 @php
@@ -119,18 +119,18 @@
         </div>
 
         <div class="rounded-lg border border-zinc-200 p-5 text-zinc-700 dark:border-zinc-700 dark:text-zinc-200">
-            <flux:heading size="lg">{{ __('Top Produkte (30 Tage)') }}</flux:heading>
+            <flux:heading size="lg">{{ __('topProducts30Days') }}</flux:heading>
             <div class="mt-4 space-y-2">
                 @forelse ($metrics['topProducts'] as $product)
                     <div class="flex items-start justify-between gap-3 rounded-md border border-zinc-200 px-3 py-2 text-sm text-zinc-700 dark:border-zinc-700 dark:text-zinc-200">
                         <div class="font-medium">{{ $product->product_name }}</div>
                         <div class="text-right text-xs text-zinc-500">
-                            <div>{{ __('Anfragen') }}: {{ $product->inquiry_count }}</div>
-                            <div>{{ __('Menge') }}: {{ $product->total_quantity }}</div>
+                            <div>{{ __('inquiries') }}: {{ $product->inquiry_count }}</div>
+                            <div>{{ __('quantity') }}: {{ $product->total_quantity }}</div>
                         </div>
                     </div>
                 @empty
-                    <flux:text>{{ __('Keine Produktanfragen im gewaehlten Zeitraum.') }}</flux:text>
+                    <flux:text>{{ __('noProductInquiriesInTheSelectedPeriod') }}</flux:text>
                 @endforelse
             </div>
         </div>
@@ -138,10 +138,10 @@
 
     <div class="grid gap-6 xl:grid-cols-2">
         <div class="rounded-lg border border-zinc-200 p-5 text-zinc-700 dark:border-zinc-700 dark:text-zinc-200">
-            <flux:heading size="lg">{{ __('Umsatzkennzahlen') }}</flux:heading>
+            <flux:heading size="lg">{{ __('revenueMetrics') }}</flux:heading>
             <div class="mt-4 grid gap-3 sm:grid-cols-2">
                 <div class="rounded-md border border-zinc-200 p-3 text-zinc-700 dark:border-zinc-700 dark:text-zinc-200">
-                    <flux:text size="sm" class="text-zinc-500">{{ __('Heute') }}</flux:text>
+                    <flux:text size="sm" class="text-zinc-500">{{ __('today') }}</flux:text>
                     <flux:heading size="lg">{{ number_format($metrics['revenueToday'], 2, ',', '.') }} EUR</flux:heading>
                 </div>
                 <div class="rounded-md border border-zinc-200 p-3 text-zinc-700 dark:border-zinc-700 dark:text-zinc-200">
@@ -153,7 +153,7 @@
                     <flux:heading size="lg">{{ number_format($metrics['yearToDateRevenue'], 2, ',', '.') }} EUR</flux:heading>
                 </div>
                 <div class="rounded-md border border-zinc-200 p-3 text-zinc-700 dark:border-zinc-700 dark:text-zinc-200">
-                    <flux:text size="sm" class="text-zinc-500">{{ __('Ø Auftragswert') }}</flux:text>
+                    <flux:text size="sm" class="text-zinc-500">{{ __('avgOrderValue') }}</flux:text>
                     <flux:heading size="lg">{{ number_format($metrics['averageOrderValue'], 2, ',', '.') }} EUR</flux:heading>
                 </div>
             </div>
@@ -161,7 +161,7 @@
         </div>
 
         <div class="rounded-lg border border-zinc-200 p-5 text-zinc-700 dark:border-zinc-700 dark:text-zinc-200">
-            <flux:heading size="lg">{{ __('Umsatz pro Monat (12 Monate)') }}</flux:heading>
+            <flux:heading size="lg">{{ __('revenuePerMonth12Months') }}</flux:heading>
             <div class="mt-4 space-y-2">
                 @php
                     $maxMonthlyRevenue = max(array_column($metrics['monthlyRevenue'], 'amount')) ?: 1;

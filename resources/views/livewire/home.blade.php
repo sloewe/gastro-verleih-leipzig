@@ -2,10 +2,10 @@
 <div class="space-y-12">
     <section class="text-center space-y-4">
         <flux:heading size="2xl" level="1" class="text-gtc-green tracking-tight font-bold">
-            {{ __('Entdecke unser Sortiment') }}
+            {{ __('discoverOurAssortment') }}
         </flux:heading>
         <flux:subheading size="lg" class="max-w-2xl mx-auto text-gtc-muted">
-            {{ __('Hochwertiges Equipment für Ihr Event in Leipzig und Umgebung. Einfach leihen, entspannt feiern.') }}
+            {{ __('highQualityEquipmentForYourEventInLeipzigAndTheSurroundingAreaEasyRentalRelaxedCelebration') }}
         </flux:subheading>
     </section>
 

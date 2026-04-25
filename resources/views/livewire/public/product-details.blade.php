@@ -39,7 +39,7 @@
                         {{ number_format((float) $product->price, 2, ',', '.') }} €
                     </flux:text>
                     <flux:text class="max-w-2xl text-sm leading-relaxed text-gtc-muted">
-                        {{ __('Preise sind netto zzgl. :rate% MwSt. und beziehen sich auf den ersten Ausleihtag ab Lager. Jeder weitere Tag kostet 50% des Angebotspreises. Eine Lieferung ist nach Absprache möglich.', ['rate' => number_format((float) ($product->vat_rate ?? 19), 0, ',', '.')]) }}
+                        {{ __('pricesAreNetPlusRatePercentVatAndApplyToTheFirstRentalDayExWarehouseEachAdditionalDayCosts50PercentOfTheQuotedPriceDeliveryIsPossibleByArrangement', ['rate' => number_format((float) ($product->vat_rate ?? 19), 0, ',', '.')]) }}
                     </flux:text>
                 </div>
 
@@ -47,7 +47,7 @@
                     <flux:field class="max-w-xs">
                         <flux:label>{{ $product->feature_name }}</flux:label>
                         <flux:select wire:model.live="selectedFeatureValue">
-                            <flux:select.option value="">{{ __('Bitte auswählen') }}</flux:select.option>
+                            <flux:select.option value="">{{ __('pleaseSelect') }}</flux:select.option>
                             @foreach ($product->feature_values as $featureValue)
                                 <flux:select.option value="{{ $featureValue }}">{{ $featureValue }}</flux:select.option>
                             @endforeach
@@ -63,18 +63,18 @@
                     </div>
                 @endif
 
-                <flux:button wire:click="addToInquiryList" class="btn-primary-inquiry">{{ __('Zur Anfrage hinzufügen') }}</flux:button>
+                <flux:button wire:click="addToInquiryList" class="btn-primary-inquiry">{{ __('addToInquiry') }}</flux:button>
             </div>
         </div>
 
         <div class="border-t border-zinc-200 pt-8">
             <div class="grid gap-4 md:grid-cols-[12rem_minmax(0,1fr)] md:gap-8">
-                <p class="text-sm uppercase tracking-[0.14em] text-gtc-muted">{{ __('Beschreibung') }}</p>
+                <p class="text-sm uppercase tracking-[0.14em] text-gtc-muted">{{ __('description') }}</p>
                 <div class="space-y-4 text-base leading-relaxed text-gtc-ink">
                     @if ($product->description)
                         {!! nl2br(e($product->description)) !!}
                     @else
-                        <p>{{ __('Für dieses Produkt ist aktuell keine ausführliche Beschreibung hinterlegt.') }}</p>
+                        <p>{{ __('thereIsCurrentlyNoDetailedDescriptionAvailableForThisProduct') }}</p>
                     @endif
                 </div>
             </div>

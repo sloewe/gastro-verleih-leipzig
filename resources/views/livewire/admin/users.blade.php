@@ -2,22 +2,22 @@
 <div class="space-y-6">
     <div class="flex items-center justify-between">
         <div>
-            <flux:heading size="xl" level="1">{{ __('Benutzer') }}</flux:heading>
-            <flux:subheading>{{ __('Verwalten Sie die Benutzer, die Zugriff auf das Backend haben.') }}</flux:subheading>
+            <flux:heading size="xl" level="1">{{ __('users') }}</flux:heading>
+            <flux:subheading>{{ __('manageTheUsersWhoHaveAccessToTheBackend') }}</flux:subheading>
         </div>
 
-        <flux:button wire:click="create" variant="primary" icon="plus">{{ __('Neuer Benutzer') }}</flux:button>
+        <flux:button wire:click="create" variant="primary" icon="plus">{{ __('newUser') }}</flux:button>
     </div>
 
     <div class="flex items-center space-x-4">
-        <flux:input wire:model.live.debounce.300ms="search" placeholder="{{ __('Suche...') }}" icon="magnifying-glass" clearable />
+        <flux:input wire:model.live.debounce.300ms="search" placeholder="{{ __('search') }}" icon="magnifying-glass" clearable />
     </div>
 
     <flux:table>
         <flux:table.columns>
             <flux:table.column sortable wire:click="sortBy('name')">{{ __('Name') }}</flux:table.column>
-            <flux:table.column>{{ __('E-Mail') }}</flux:table.column>
-            <flux:table.column>{{ __('Erstellt am') }}</flux:table.column>
+            <flux:table.column>{{ __('email') }}</flux:table.column>
+            <flux:table.column>{{ __('createdAt') }}</flux:table.column>
             <flux:table.column></flux:table.column>
         </flux:table.columns>
 
@@ -41,8 +41,8 @@
     <flux:modal name="user-modal" class="min-w-[24rem]">
         <form wire:submit="save" class="space-y-6">
             <div>
-                <flux:heading size="lg">{{ $editing ? __('Benutzer bearbeiten') : __('Neuer Benutzer') }}</flux:heading>
-                <flux:subheading>{{ __('Geben Sie die Details des Benutzers ein.') }}</flux:subheading>
+                <flux:heading size="lg">{{ $editing ? __('editUser') : __('newUser') }}</flux:heading>
+                <flux:subheading>{{ __('enterTheUserDetails') }}</flux:subheading>
             </div>
 
             <flux:field>
@@ -52,17 +52,17 @@
             </flux:field>
 
             <flux:field>
-                <flux:label>{{ __('E-Mail') }}</flux:label>
+                <flux:label>{{ __('email') }}</flux:label>
                 <flux:input type="email" wire:model="email" />
                 <flux:error name="email" />
             </flux:field>
 
             <flux:field>
-                <flux:label>{{ __('Passwort') }}</flux:label>
+                <flux:label>{{ __('password') }}</flux:label>
                 <flux:input type="password" wire:model="password" />
                 <flux:subheading>
                     @if ($editing)
-                        {{ __('Leer lassen, um das aktuelle Passwort zu behalten.') }}
+                        {{ __('leaveBlankToKeepTheCurrentPassword') }}
                     @endif
                 </flux:subheading>
                 <flux:error name="password" />
@@ -70,9 +70,9 @@
 
             <div class="flex justify-end space-x-2">
                 <flux:modal.close>
-                    <flux:button variant="ghost">{{ __('Abbrechen') }}</flux:button>
+                    <flux:button variant="ghost">{{ __('cancel') }}</flux:button>
                 </flux:modal.close>
-                <flux:button type="submit" variant="primary">{{ __('Speichern') }}</flux:button>
+                <flux:button type="submit" variant="primary">{{ __('save') }}</flux:button>
             </div>
         </form>
     </flux:modal>
@@ -80,15 +80,15 @@
     <flux:modal name="delete-confirmation" class="min-w-[24rem]">
         <div class="space-y-6">
             <div>
-                <flux:heading size="lg">{{ __('Benutzer löschen') }}</flux:heading>
-                <flux:subheading>{{ __('Sind Sie sicher, dass Sie diesen Benutzer löschen möchten? Dieser Vorgang kann nicht rückgängig gemacht werden.') }}</flux:subheading>
+                <flux:heading size="lg">{{ __('deleteUser') }}</flux:heading>
+                <flux:subheading>{{ __('areYouSureYouWantToDeleteThisUserThisActionCannotBeUndone') }}</flux:subheading>
             </div>
 
             <div class="flex justify-end space-x-2">
                 <flux:modal.close>
-                    <flux:button variant="ghost">{{ __('Abbrechen') }}</flux:button>
+                    <flux:button variant="ghost">{{ __('cancel') }}</flux:button>
                 </flux:modal.close>
-                <flux:button wire:click="confirmDelete" variant="danger">{{ __('Löschen') }}</flux:button>
+                <flux:button wire:click="confirmDelete" variant="danger">{{ __('delete') }}</flux:button>
             </div>
         </div>
     </flux:modal>

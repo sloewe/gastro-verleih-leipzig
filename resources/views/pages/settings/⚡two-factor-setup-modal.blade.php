@@ -132,7 +132,7 @@ new class extends Component {
             return [
                 'title' => __('Two-factor authentication enabled'),
                 'description' => __('Two-factor authentication is now enabled. Scan the QR code or enter the setup key in your authenticator app.'),
-                'buttonText' => __('Close'),
+                'buttonText' => __('close'),
             ];
         }
 

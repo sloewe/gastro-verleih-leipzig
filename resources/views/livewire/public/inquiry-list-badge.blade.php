@@ -1,5 +1,5 @@
 <span class="public-header__inquiry-label">
-    {{ __('Anfrageliste') }}
+    {{ __('inquiryList') }}
 
     @if ($count > 0)
         <span

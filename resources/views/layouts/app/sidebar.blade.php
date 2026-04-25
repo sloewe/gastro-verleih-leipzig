@@ -18,21 +18,21 @@
                     </flux:sidebar.item>
                 </flux:sidebar.group>
 
-                <flux:sidebar.group :heading="__('Verwaltung')" class="grid">
+                <flux:sidebar.group :heading="__('administration')" class="grid">
                     <flux:sidebar.item icon="layout-grid" :href="route('admin.categories')" :current="request()->routeIs('admin.categories')" class="{{ $sidebarItemClass }}" wire:navigate>
-                        {{ __('Kategorien') }}
+                        {{ __('categories') }}
                     </flux:sidebar.item>
                     <flux:sidebar.item icon="layout-grid" :href="route('admin.products')" :current="request()->routeIs('admin.products')" class="{{ $sidebarItemClass }}" wire:navigate>
-                        {{ __('Produkte') }}
+                        {{ __('products') }}
                     </flux:sidebar.item>
                     <flux:sidebar.item icon="inbox" :href="route('admin.inquiries')" :current="request()->routeIs('admin.inquiries')" class="{{ $sidebarItemClass }}" wire:navigate>
-                        {{ __('Anfragen') }}
+                        {{ __('inquiries') }}
                     </flux:sidebar.item>
                     <flux:sidebar.item icon="users" :href="route('admin.users')" :current="request()->routeIs('admin.users')" class="{{ $sidebarItemClass }}" wire:navigate>
-                        {{ __('Benutzer') }}
+                        {{ __('users') }}
                     </flux:sidebar.item>
                     <flux:sidebar.item icon="document-text" :href="route('admin.pages')" :current="request()->routeIs('admin.pages')" class="{{ $sidebarItemClass }}" wire:navigate>
-                        {{ __('Seiten') }}
+                        {{ __('pages') }}
                     </flux:sidebar.item>
                 </flux:sidebar.group>
             </flux:sidebar.nav>

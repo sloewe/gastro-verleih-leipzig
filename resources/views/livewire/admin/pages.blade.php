@@ -1,22 +1,22 @@
 <div class="space-y-6">
     <div class="flex items-center justify-between">
         <div>
-            <flux:heading size="xl" level="1">{{ __('Seiten') }}</flux:heading>
-            <flux:subheading>{{ __('Verwalten Sie statische Content-Seiten mit Markdown-Blöcken.') }}</flux:subheading>
+            <flux:heading size="xl" level="1">{{ __('pages') }}</flux:heading>
+            <flux:subheading>{{ __('manageStaticContentPagesWithMarkdownBlocks') }}</flux:subheading>
         </div>
 
-        <flux:button wire:click="create" variant="primary" icon="plus">{{ __('Neue Seite') }}</flux:button>
+        <flux:button wire:click="create" variant="primary" icon="plus">{{ __('newPage') }}</flux:button>
     </div>
 
     <div class="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)]">
         <div class="space-y-4">
-            <flux:input wire:model.live.debounce.300ms="search" placeholder="{{ __('Seite suchen...') }}" icon="magnifying-glass" clearable />
+            <flux:input wire:model.live.debounce.300ms="search" placeholder="{{ __('searchPage') }}" icon="magnifying-glass" clearable />
 
             <flux:table>
                 <flux:table.columns>
-                    <flux:table.column>{{ __('Titel') }}</flux:table.column>
+                    <flux:table.column>{{ __('title') }}</flux:table.column>
                     <flux:table.column>{{ __('Slug') }}</flux:table.column>
-                    <flux:table.column>{{ __('Blöcke') }}</flux:table.column>
+                    <flux:table.column>{{ __('blocks') }}</flux:table.column>
                     <flux:table.column></flux:table.column>
                 </flux:table.columns>
 
@@ -39,13 +39,13 @@
         <div class="rounded-lg border border-zinc-200 p-5 dark:border-zinc-700">
             <form wire:submit="save" class="space-y-6">
                 <div>
-                    <flux:heading size="lg">{{ $editing ? __('Seite bearbeiten') : __('Neue Seite erstellen') }}</flux:heading>
-                    <flux:subheading>{{ __('Definieren Sie Seitendaten und Content-Blöcke.') }}</flux:subheading>
+                    <flux:heading size="lg">{{ $editing ? __('editPage') : __('createNewPage') }}</flux:heading>
+                    <flux:subheading>{{ __('definePageDataAndContentBlocks') }}</flux:subheading>
                 </div>
 
                 <div class="grid gap-4">
                     <flux:field>
-                        <flux:label>{{ __('Titel') }}</flux:label>
+                        <flux:label>{{ __('title') }}</flux:label>
                         <flux:input wire:model.live="title" />
                         <flux:error name="title" />
                     </flux:field>
@@ -69,7 +69,7 @@
                     </flux:field>
                 </div>
 
-                <flux:separator text="{{ __('Content-Blöcke') }}" />
+                <flux:separator text="{{ __('contentBlocks') }}" />
 
                 <div class="space-y-4">
                     @foreach ($blocks as $index => $block)
@@ -87,7 +87,7 @@
                             </div>
 
                             <flux:field>
-                                <flux:label>{{ __('Block-Typ') }}</flux:label>
+                                <flux:label>{{ __('blockType') }}</flux:label>
                                 <flux:input value="markdown" disabled />
                                 <flux:error name="blocks.{{ $index }}.type" />
                             </flux:field>
@@ -99,7 +99,7 @@
                             </flux:field>
 
                             <div class="mt-4 space-y-2 rounded-md bg-zinc-50 p-3 dark:bg-zinc-800/70">
-                                <flux:text class="text-xs uppercase tracking-wide text-zinc-500">{{ __('Live-Vorschau') }}</flux:text>
+                                <flux:text class="text-xs uppercase tracking-wide text-zinc-500">{{ __('livePreview') }}</flux:text>
                                 <div class="prose prose-sm max-w-none dark:prose-invert">
                                     {!! \Illuminate\Support\Str::markdown($block['content_markdown'] ?? '', ['html_input' => 'strip', 'allow_unsafe_links' => false]) !!}
                                 </div>
@@ -109,8 +109,8 @@
                 </div>
 
                 <div class="flex items-center justify-between gap-4">
-                    <flux:button type="button" variant="ghost" icon="plus" wire:click="addBlock">{{ __('Block hinzufügen') }}</flux:button>
-                    <flux:button type="submit" variant="primary">{{ __('Speichern') }}</flux:button>
+                    <flux:button type="button" variant="ghost" icon="plus" wire:click="addBlock">{{ __('addBlock') }}</flux:button>
+                    <flux:button type="submit" variant="primary">{{ __('save') }}</flux:button>
                 </div>
             </form>
         </div>

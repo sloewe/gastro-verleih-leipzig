@@ -15,7 +15,7 @@
             <span class="public-header__brand-title">Gastro-Verleih Leipzig</span>
         </a>
 
-        <nav class="public-header__desktop-nav" aria-label="{{ __('Hauptnavigation') }}">
+        <nav class="public-header__desktop-nav" aria-label="{{ __('mainNavigation') }}">
             <a
                 href="{{ route('home') }}"
                 class="public-header__nav-item !text-gtc-green {{ request()->routeIs('home') ? 'is-active' : '' }}"
@@ -26,7 +26,7 @@
 
             <details data-public-products-dropdown class="public-header__dropdown {{ request()->routeIs('category.show') ? 'is-active' : '' }}">
                 <summary class="public-header__nav-item">
-                    {{ __('Produkte') }}
+                    {{ __('products') }}
                 </summary>
 
                 <div class="public-header__menu" role="menu">
@@ -54,7 +54,7 @@
         <nav class="public-header__mobile-nav md:hidden" aria-label="{{ __('Mobile Navigation') }}">
             <details class="public-header__mobile-dropdown">
                 <summary class="public-header__nav-item">
-                    {{ __('Menü') }}
+                    {{ __('menu') }}
                 </summary>
 
                 <div class="public-header__menu">
@@ -83,7 +83,7 @@
                         class="public-header__menu-item {{ request()->routeIs('inquiry.list') ? 'is-active' : '' }}"
                         @if (request()->routeIs('inquiry.list')) aria-current="page" @endif
                     >
-                        {{ __('Anfrageliste') }}
+                        {{ __('inquiryList') }}
                     </a>
                 </div>
             </details>
@@ -100,15 +100,15 @@
 <footer class="public-footer">
     <div class="container public-footer__content">
         <p class="public-footer__copyright">
-            &copy; {{ date('Y') }} Gastro-Verleih Leipzig. {{ __('Alle Rechte vorbehalten.') }}
+            &copy; {{ date('Y') }} Gastro-Verleih Leipzig. {{ __('allRightsReserved') }}
         </p>
 
         <div class="public-footer__links">
             <a href="{{ route('content.page', 'impressum') }}" class="public-footer__link">
-                {{ __('Impressum') }}
+                {{ __('legalNotice') }}
             </a>
             <a href="{{ route('content.page', 'datenschutz') }}" class="public-footer__link">
-                {{ __('Datenschutz') }}
+                {{ __('privacyPolicy') }}
             </a>
             @auth
                 <a href="{{ route('dashboard') }}" class="public-footer__link">

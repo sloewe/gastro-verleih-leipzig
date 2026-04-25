@@ -3,7 +3,7 @@
 
     <section class="space-y-3">
         <flux:subheading size="sm" class="uppercase tracking-wider text-gtc-muted">
-            {{ __('Produkte') }}
+            {{ __('products') }}
         </flux:subheading>
         <flux:heading size="2xl" level="1" class="text-gtc-green tracking-tight font-bold">
             {{ $category->name }}
@@ -36,7 +36,7 @@
                                 </flux:heading>
                             </a>
                             <flux:text class="line-clamp-2 text-gtc-muted">
-                                {{ $product->description ?: __('Weitere Details finden Sie in der Produktansicht.') }}
+                                {{ $product->description ?: __('furtherDetailsCanBeFoundInTheProductView') }}
                             </flux:text>
                         </div>
 
@@ -52,7 +52,7 @@
                                 <flux:field>
                                     <flux:label>{{ $product->feature_name }}</flux:label>
                                     <flux:select wire:model.live="selectedFeatureValues.{{ $product->id }}">
-                                        <flux:select.option value="">{{ __('Bitte auswählen') }}</flux:select.option>
+                                        <flux:select.option value="">{{ __('pleaseSelect') }}</flux:select.option>
                                         @foreach ($product->feature_values as $featureValue)
                                             <flux:select.option value="{{ $featureValue }}">{{ $featureValue }}</flux:select.option>
                                         @endforeach
@@ -61,7 +61,7 @@
                             @endif
 
                             <flux:button wire:click="addToInquiryList({{ $product->id }})" class="btn-primary-inquiry">
-                                {{ __('Zur Anfrage hinzufügen') }}
+                                {{ __('addToInquiry') }}
                             </flux:button>
                         </div>
                     </div>
@@ -70,7 +70,7 @@
         @empty
             <div class="rounded-apple border border-dashed border-zinc-300 bg-white p-8 text-center">
                 <flux:text class="text-gtc-muted">
-                    {{ __('In dieser Kategorie sind aktuell keine Produkte verfügbar.') }}
+                    {{ __('noProductsAreCurrentlyAvailableInThisCategory') }}
                 </flux:text>
             </div>
         @endforelse

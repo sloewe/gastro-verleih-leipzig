@@ -1,15 +1,15 @@
 <div class="space-y-6">
     <div>
-        <flux:heading size="xl" level="1">{{ __('Anfragen') }}</flux:heading>
-        <flux:subheading>{{ __('Verwalten Sie eingegangene Kundenanfragen und deren Bearbeitungsstatus.') }}</flux:subheading>
+        <flux:heading size="xl" level="1">{{ __('inquiries') }}</flux:heading>
+        <flux:subheading>{{ __('manageIncomingCustomerInquiriesAndTheirProcessingStatus') }}</flux:subheading>
     </div>
 
     <div class="grid gap-6 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)]">
         <div class="space-y-4">
             <div class="flex items-center gap-4">
-                <flux:input wire:model.live.debounce.300ms="search" placeholder="{{ __('Anfrage suchen...') }}" icon="magnifying-glass" clearable />
+                <flux:input wire:model.live.debounce.300ms="search" placeholder="{{ __('searchInquiry') }}" icon="magnifying-glass" clearable />
 
-                <flux:select wire:model.live="statusFilter" placeholder="{{ __('Status filtern') }}" clearable>
+                <flux:select wire:model.live="statusFilter" placeholder="{{ __('filterStatus') }}" clearable>
                     @foreach ($this->statusOptions() as $statusValue => $statusLabel)
                         <flux:select.option :value="$statusValue">{{ __($statusLabel) }}</flux:select.option>
                     @endforeach
@@ -18,11 +18,11 @@
 
             <flux:table :paginate="$inquiries">
                 <flux:table.columns>
-                    <flux:table.column>{{ __('Eingang') }}</flux:table.column>
-                    <flux:table.column>{{ __('Kunde') }}</flux:table.column>
-                    <flux:table.column>{{ __('Kontakt') }}</flux:table.column>
-                    <flux:table.column>{{ __('Positionen') }}</flux:table.column>
-                    <flux:table.column>{{ __('Status') }}</flux:table.column>
+                    <flux:table.column>{{ __('received') }}</flux:table.column>
+                    <flux:table.column>{{ __('customer') }}</flux:table.column>
+                    <flux:table.column>{{ __('contact') }}</flux:table.column>
+                    <flux:table.column>{{ __('items') }}</flux:table.column>
+                    <flux:table.column>{{ __('status') }}</flux:table.column>
                     <flux:table.column></flux:table.column>
                 </flux:table.columns>
 
@@ -70,7 +70,7 @@
                 <div class="space-y-5">
                     <div class="flex items-start justify-between gap-4">
                         <div>
-                            <flux:heading size="lg">{{ __('Anfrage #:id', ['id' => $selectedInquiry->id]) }}</flux:heading>
+                            <flux:heading size="lg">{{ __('inquiryNumberId', ['id' => $selectedInquiry->id]) }}</flux:heading>
                             <flux:subheading>{{ __('Eingegangen am :date', ['date' => $selectedInquiry->created_at->format('d.m.Y H:i')]) }}</flux:subheading>
                         </div>
                         <flux:badge :variant="$this->statusBadgeVariant($selectedInquiry->status)">
@@ -79,7 +79,7 @@
                     </div>
 
                     <flux:field>
-                        <flux:label>{{ __('Status ändern') }}</flux:label>
+                        <flux:label>{{ __('changeStatus') }}</flux:label>
                         <flux:select
                             :value="$selectedInquiry->status"
                             wire:change="updateStatus({{ $selectedInquiry->id }}, $event.target.value)"
@@ -90,11 +90,11 @@
                         </flux:select>
                     </flux:field>
 
-                    <flux:separator text="{{ __('Kundendaten') }}" />
+                    <flux:separator text="{{ __('customerData') }}" />
 
                     <dl class="space-y-2 text-sm">
                         <div class="grid grid-cols-[10rem_1fr] gap-3">
-                            <dt class="text-zinc-500">{{ __('Anrede') }}</dt>
+                            <dt class="text-zinc-500">{{ __('salutation') }}</dt>
                             <dd>{{ $selectedInquiry->salutation ?: '—' }}</dd>
                         </div>
                         <div class="grid grid-cols-[10rem_1fr] gap-3">
@@ -102,32 +102,32 @@
                             <dd>{{ trim($selectedInquiry->first_name.' '.$selectedInquiry->last_name) }}</dd>
                         </div>
                         <div class="grid grid-cols-[10rem_1fr] gap-3">
-                            <dt class="text-zinc-500">{{ __('Firma') }}</dt>
+                            <dt class="text-zinc-500">{{ __('company') }}</dt>
                             <dd>{{ $selectedInquiry->company ?: '—' }}</dd>
                         </div>
                         <div class="grid grid-cols-[10rem_1fr] gap-3">
-                            <dt class="text-zinc-500">{{ __('E-Mail') }}</dt>
+                            <dt class="text-zinc-500">{{ __('email') }}</dt>
                             <dd>{{ $selectedInquiry->email }}</dd>
                         </div>
                         <div class="grid grid-cols-[10rem_1fr] gap-3">
-                            <dt class="text-zinc-500">{{ __('Telefon') }}</dt>
+                            <dt class="text-zinc-500">{{ __('phone') }}</dt>
                             <dd>{{ $selectedInquiry->phone ?: '—' }}</dd>
                         </div>
                         <div class="grid grid-cols-[10rem_1fr] gap-3">
-                            <dt class="text-zinc-500">{{ __('Straße') }}</dt>
+                            <dt class="text-zinc-500">{{ __('street') }}</dt>
                             <dd>{{ $selectedInquiry->street ?: '—' }}</dd>
                         </div>
                         <div class="grid grid-cols-[10rem_1fr] gap-3">
-                            <dt class="text-zinc-500">{{ __('PLZ / Ort') }}</dt>
+                            <dt class="text-zinc-500">{{ __('postalCodeCity') }}</dt>
                             <dd>{{ trim(($selectedInquiry->postal_code ?? '').' '.($selectedInquiry->city ?? '')) ?: '—' }}</dd>
                         </div>
                         <div class="grid grid-cols-[10rem_1fr] gap-3">
-                            <dt class="text-zinc-500">{{ __('Nachricht') }}</dt>
+                            <dt class="text-zinc-500">{{ __('message') }}</dt>
                             <dd class="whitespace-pre-line">{{ $selectedInquiry->message ?: '—' }}</dd>
                         </div>
                     </dl>
 
-                    <flux:separator text="{{ __('Angefragte Produkte') }}" />
+                    <flux:separator text="{{ __('requestedProducts') }}" />
 
                     <div class="space-y-3">
                         @forelse ($selectedInquiry->products as $product)
@@ -147,13 +147,13 @@
                                 </div>
                             </div>
                         @empty
-                            <flux:text>{{ __('Keine Positionen vorhanden.') }}</flux:text>
+                            <flux:text>{{ __('noItemsAvailable') }}</flux:text>
                         @endforelse
                     </div>
                 </div>
             @else
                 <div class="flex min-h-[20rem] items-center justify-center">
-                    <flux:text>{{ __('Wählen Sie links eine Anfrage aus, um die Details zu sehen.') }}</flux:text>
+                    <flux:text>{{ __('selectAnInquiryOnTheLeftToViewTheDetails') }}</flux:text>
                 </div>
             @endif
         </div>

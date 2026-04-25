@@ -2,23 +2,23 @@
 <div class="space-y-6">
     <div class="flex items-center justify-between">
         <div>
-            <flux:heading size="xl" level="1">{{ __('Kategorien') }}</flux:heading>
-            <flux:subheading>{{ __('Verwalten Sie Ihre Produktkategorien.') }}</flux:subheading>
+            <flux:heading size="xl" level="1">{{ __('categories') }}</flux:heading>
+            <flux:subheading>{{ __('manageYourProductCategories') }}</flux:subheading>
         </div>
 
-        <flux:button wire:click="create" variant="primary" icon="plus">{{ __('Neue Kategorie') }}</flux:button>
+        <flux:button wire:click="create" variant="primary" icon="plus">{{ __('newCategory') }}</flux:button>
     </div>
 
     <div class="flex items-center space-x-4">
-        <flux:input wire:model.live.debounce.300ms="search" placeholder="{{ __('Suche...') }}" icon="magnifying-glass" clearable />
+        <flux:input wire:model.live.debounce.300ms="search" placeholder="{{ __('search') }}" icon="magnifying-glass" clearable />
     </div>
 
     <flux:table>
         <flux:table.columns>
-            <flux:table.column>{{ __('Bild') }}</flux:table.column>
+            <flux:table.column>{{ __('image') }}</flux:table.column>
             <flux:table.column sortable wire:click="sortBy('name')">{{ __('Name') }}</flux:table.column>
             <flux:table.column>{{ __('Slug') }}</flux:table.column>
-            <flux:table.column>{{ __('Erstellt am') }}</flux:table.column>
+            <flux:table.column>{{ __('createdAt') }}</flux:table.column>
             <flux:table.column></flux:table.column>
         </flux:table.columns>
 
@@ -49,8 +49,8 @@
     <flux:modal name="category-modal" class="min-w-[24rem]">
         <form wire:submit="save" class="space-y-6">
             <div>
-                <flux:heading size="lg">{{ $editing ? __('Kategorie bearbeiten') : __('Neue Kategorie') }}</flux:heading>
-                <flux:subheading>{{ __('Geben Sie die Details der Kategorie ein.') }}</flux:subheading>
+                <flux:heading size="lg">{{ $editing ? __('editCategory') : __('newCategory') }}</flux:heading>
+                <flux:subheading>{{ __('enterTheCategoryDetails') }}</flux:subheading>
             </div>
 
             <flux:field>
@@ -66,7 +66,7 @@
             </flux:field>
 
             <flux:field>
-                <flux:label>{{ __('Bild') }}</flux:label>
+                <flux:label>{{ __('image') }}</flux:label>
                 <flux:input type="file" wire:model="image" />
                 <flux:error name="image" />
 
@@ -83,9 +83,9 @@
 
             <div class="flex justify-end space-x-2">
                 <flux:modal.close>
-                    <flux:button variant="ghost">{{ __('Abbrechen') }}</flux:button>
+                    <flux:button variant="ghost">{{ __('cancel') }}</flux:button>
                 </flux:modal.close>
-                <flux:button type="submit" variant="primary">{{ __('Speichern') }}</flux:button>
+                <flux:button type="submit" variant="primary">{{ __('save') }}</flux:button>
             </div>
         </form>
     </flux:modal>
@@ -93,15 +93,15 @@
     <flux:modal name="delete-confirmation" class="min-w-[24rem]">
         <div class="space-y-6">
             <div>
-                <flux:heading size="lg">{{ __('Kategorie löschen') }}</flux:heading>
-                <flux:subheading>{{ __('Sind Sie sicher, dass Sie diese Kategorie löschen möchten? Dieser Vorgang kann nicht rückgängig gemacht werden.') }}</flux:subheading>
+                <flux:heading size="lg">{{ __('deleteCategory') }}</flux:heading>
+                <flux:subheading>{{ __('areYouSureYouWantToDeleteThisCategoryThisActionCannotBeUndone') }}</flux:subheading>
             </div>
 
             <div class="flex justify-end space-x-2">
                 <flux:modal.close>
-                    <flux:button variant="ghost">{{ __('Abbrechen') }}</flux:button>
+                    <flux:button variant="ghost">{{ __('cancel') }}</flux:button>
                 </flux:modal.close>
-                <flux:button wire:click="confirmDelete" variant="danger">{{ __('Löschen') }}</flux:button>
+                <flux:button wire:click="confirmDelete" variant="danger">{{ __('delete') }}</flux:button>
             </div>
         </div>
     </flux:modal>

@@ -1,5 +1,5 @@
 <div class="space-y-8">
-    <x-slot:title>{{ __('Anfrageliste') }}</x-slot:title>
+    <x-slot:title>{{ __('inquiryList') }}</x-slot:title>
 
     @if (session()->has('checkout_error'))
         <div class="rounded-xl border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-900">
@@ -9,31 +9,31 @@
 
     <section class="space-y-3">
         <flux:subheading size="sm" class="uppercase tracking-wider text-gtc-muted">
-            {{ __('Anfrage') }}
+            {{ __('inquiry') }}
         </flux:subheading>
         <flux:heading size="2xl" level="1" class="text-gtc-green tracking-tight font-bold">
-            {{ __('Ihre Anfrageliste') }}
+            {{ __('yourInquiryList') }}
         </flux:heading>
     </section>
 
     @if (empty($items))
         <div class="rounded-apple border border-dashed border-zinc-300 bg-white p-8 text-center space-y-4">
             <flux:text class="text-gtc-muted">
-                {{ __('Ihre Anfrageliste ist aktuell leer.') }}
+                {{ __('yourInquiryListIsCurrentlyEmpty') }}
             </flux:text>
 
             <flux:button :href="route('home')" variant="primary">
-                {{ __('Produkte entdecken') }}
+                {{ __('discoverProducts') }}
             </flux:button>
         </div>
     @else
         <div class="grid gap-6 xl:grid-cols-[minmax(0,2fr)_minmax(18rem,1fr)]">
             <section class="overflow-hidden rounded-apple border border-zinc-200 bg-white shadow-sm">
                 <div class="hidden grid-cols-[minmax(0,1.6fr)_minmax(0,0.6fr)_minmax(0,0.9fr)_minmax(0,0.9fr)] gap-4 border-b border-zinc-200 px-6 py-4 text-xs font-semibold uppercase tracking-wide text-zinc-500 md:grid">
-                    <span>{{ __('Produkt') }}</span>
-                    <span class="text-right">{{ __('Preis') }}</span>
-                    <span class="text-center">{{ __('Anzahl') }}</span>
-                    <span class="text-right">{{ __('Zwischensumme') }}</span>
+                    <span>{{ __('product') }}</span>
+                    <span class="text-right">{{ __('price') }}</span>
+                    <span class="text-center">{{ __('quantity') }}</span>
+                    <span class="text-right">{{ __('subtotal') }}</span>
                 </div>
 
                 <div class="divide-y divide-zinc-200">
@@ -63,17 +63,17 @@
                                     </a>
 
                                     <p class="text-xs leading-relaxed text-zinc-700">
-                                        {{ $item['product_description'] ?: __('Weitere Details finden Sie in der Produktansicht.') }}
+                                        {{ $item['product_description'] ?: __('furtherDetailsCanBeFoundInTheProductView') }}
                                     </p>
 
                                     @if ($item['feature_value'])
                                         <flux:text class="text-xs text-zinc-600">
-                                            {{ __('Auswahl') }}: {{ $item['feature_value'] }}
+                                            {{ __('selection') }}: {{ $item['feature_value'] }}
                                         </flux:text>
                                     @endif
 
                                     <flux:text class="text-xs text-zinc-600">
-                                        {{ __('MwSt.') }} {{ number_format($item['vat_rate'], 2, ',', '.') }} %
+                                        {{ __('vat') }} {{ number_format($item['vat_rate'], 2, ',', '.') }} %
                                     </flux:text>
                                 </div>
                             </div>
@@ -91,7 +91,7 @@
                                     value="{{ $item['quantity'] }}"
                                     wire:change="updateQuantity('{{ $item['key'] }}', $event.target.value)"
                                     class="w-14 rounded-lg border border-zinc-300 bg-white px-2 py-1 text-center text-sm font-semibold text-gtc-ink focus:border-gtc-green focus:outline-none focus:ring-2 focus:ring-gtc-green/25"
-                                    aria-label="{{ __('Anzahl für :product', ['product' => $item['product_name']]) }}"
+                                    aria-label="{{ __('quantityForProduct', ['product' => $item['product_name']]) }}"
                                 >
                                 <flux:button wire:click="increaseQuantity('{{ $item['key'] }}')" variant="ghost" size="sm" icon="plus" class="!text-gtc-ink" />
                             </div>
@@ -115,22 +115,22 @@
 
             <aside class="h-fit rounded-apple border border-zinc-200 bg-white p-6 shadow-sm xl:sticky xl:top-24">
                 <flux:heading size="md" level="2" class="mb-4 uppercase tracking-wide text-zinc-600">
-                    {{ __('Anfrage-Summe') }}
+                    {{ __('inquiryTotal') }}
                 </flux:heading>
 
                 <div class="space-y-3">
                     <div class="flex items-center justify-between gap-4 border-b border-zinc-200 pb-2">
-                        <flux:text class="text-sm text-gtc-muted">{{ __('Nettopreis') }}</flux:text>
+                        <flux:text class="text-sm text-gtc-muted">{{ __('netPrice') }}</flux:text>
                         <flux:text class="text-sm font-semibold text-gtc-ink">{{ number_format($summary['subtotal_net'], 2, ',', '.') }} €</flux:text>
                     </div>
 
                     <div class="flex items-center justify-between gap-4 border-b border-zinc-200 pb-2">
-                        <flux:text class="text-sm text-gtc-muted">{{ __('MwSt.') }}</flux:text>
+                        <flux:text class="text-sm text-gtc-muted">{{ __('vat') }}</flux:text>
                         <flux:text class="text-sm font-semibold text-gtc-ink">{{ number_format($summary['vat_total'], 2, ',', '.') }} €</flux:text>
                     </div>
 
                     <div class="flex items-center justify-between gap-4 pt-1">
-                        <flux:text class="text-base font-semibold text-gtc-ink">{{ __('Gesamtpreis') }}</flux:text>
+                        <flux:text class="text-base font-semibold text-gtc-ink">{{ __('totalPrice') }}</flux:text>
                         <flux:heading size="lg" level="3" class="text-gtc-green">
                             {{ number_format($summary['grand_total'], 2, ',', '.') }} €
                         </flux:heading>
@@ -139,11 +139,11 @@
 
                 <div class="mt-6 space-y-3">
                     <flux:button :href="route('home')" variant="ghost" class="w-full">
-                        {{ __('Einkauf fortsetzen') }}
+                        {{ __('continueShopping') }}
                     </flux:button>
 
                     <flux:button :href="route('inquiry.checkout')" variant="primary" class="w-full">
-                        {{ __('Weiter zur Anfrage') }}
+                        {{ __('proceedToInquiry') }}
                     </flux:button>
                 </div>
             </aside>
