@@ -122,6 +122,16 @@
                             <dd>{{ trim(($selectedInquiry->postal_code ?? '').' '.($selectedInquiry->city ?? '')) ?: '—' }}</dd>
                         </div>
                         <div class="grid grid-cols-[10rem_1fr] gap-3">
+                            <dt class="text-zinc-500">{{ __('inquiryPeriod') }}</dt>
+                            <dd>
+                                @if ($selectedInquiry->start_date && $selectedInquiry->end_date)
+                                    {{ $selectedInquiry->start_date->format('d.m.Y') }} - {{ $selectedInquiry->end_date->format('d.m.Y') }}
+                                @else
+                                    —
+                                @endif
+                            </dd>
+                        </div>
+                        <div class="grid grid-cols-[10rem_1fr] gap-3">
                             <dt class="text-zinc-500">{{ __('message') }}</dt>
                             <dd class="whitespace-pre-line">{{ $selectedInquiry->message ?: '—' }}</dd>
                         </div>

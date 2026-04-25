@@ -24,7 +24,14 @@ class Inquiry extends Model
         'street',
         'postal_code',
         'city',
+        'start_date',
+        'end_date',
         'status',
+    ];
+
+    protected $casts = [
+        'start_date' => 'date',
+        'end_date' => 'date',
     ];
 
     /**

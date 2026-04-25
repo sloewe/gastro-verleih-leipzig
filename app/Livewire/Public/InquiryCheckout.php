@@ -32,6 +32,10 @@ class InquiryCheckout extends Component
 
     public string $city = '';
 
+    public string $start_date = '';
+
+    public string $end_date = '';
+
     public string $message = '';
 
     public function mount(): void
@@ -57,6 +61,8 @@ class InquiryCheckout extends Component
             'street' => ['required', 'string', 'max:255'],
             'postal_code' => ['required', 'string', 'max:32'],
             'city' => ['required', 'string', 'max:255'],
+            'start_date' => ['required', 'date'],
+            'end_date' => ['required', 'date', 'after_or_equal:start_date'],
             'message' => ['nullable', 'string', 'max:3000'],
         ];
     }
@@ -84,6 +90,8 @@ class InquiryCheckout extends Component
                 'street' => $validated['street'],
                 'postal_code' => $validated['postal_code'],
                 'city' => $validated['city'],
+                'start_date' => $validated['start_date'],
+                'end_date' => $validated['end_date'],
                 'address' => trim($validated['street'].', '.$validated['postal_code'].' '.$validated['city']),
                 'message' => $validated['message'] ?: null,
                 'status' => 'new',

@@ -88,6 +88,20 @@
                 </div>
             </div>
 
+            <div class="grid gap-4 sm:grid-cols-2">
+                <flux:field>
+                    <flux:label>{{ __('startDate') }}</flux:label>
+                    <flux:input type="date" wire:model="start_date" />
+                    @error('start_date') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
+                </flux:field>
+
+                <flux:field>
+                    <flux:label>{{ __('endDate') }}</flux:label>
+                    <flux:input type="date" wire:model="end_date" />
+                    @error('end_date') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
+                </flux:field>
+            </div>
+
             <flux:field>
                 <flux:label>{{ __('messageOptional') }}</flux:label>
                 <flux:textarea rows="5" wire:model="message" />

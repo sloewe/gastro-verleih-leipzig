@@ -64,6 +64,8 @@ class InquiryCheckoutTest extends TestCase
             ->set('street', '')
             ->set('postal_code', '')
             ->set('city', '')
+            ->set('start_date', '')
+            ->set('end_date', '')
             ->call('submit')
             ->assertHasErrors([
                 'salutation' => ['required'],
@@ -73,6 +75,8 @@ class InquiryCheckoutTest extends TestCase
                 'street' => ['required'],
                 'postal_code' => ['required'],
                 'city' => ['required'],
+                'start_date' => ['required'],
+                'end_date' => ['required'],
             ]);
     }
 
@@ -102,6 +106,8 @@ class InquiryCheckoutTest extends TestCase
             ->set('street', 'Musterstrasse 1')
             ->set('postal_code', '04109')
             ->set('city', 'Leipzig')
+            ->set('start_date', '2026-06-10')
+            ->set('end_date', '2026-06-13')
             ->set('message', 'Bitte Rueckmeldung per E-Mail.')
             ->call('submit')
             ->assertRedirect(route('inquiry.thank-you'));
@@ -114,6 +120,8 @@ class InquiryCheckoutTest extends TestCase
             'street' => 'Musterstrasse 1',
             'postal_code' => '04109',
             'city' => 'Leipzig',
+            'start_date' => '2026-06-10 00:00:00',
+            'end_date' => '2026-06-13 00:00:00',
         ]);
 
         $this->assertDatabaseHas('inquiry_items', [
@@ -149,6 +157,8 @@ class InquiryCheckoutTest extends TestCase
             ->set('street', 'Musterstrasse 1')
             ->set('postal_code', '04109')
             ->set('city', 'Leipzig')
+            ->set('start_date', '2026-06-10')
+            ->set('end_date', '2026-06-11')
             ->call('submit')
             ->assertRedirect(route('inquiry.list'));
 
@@ -180,5 +190,36 @@ class InquiryCheckoutTest extends TestCase
             ->assertSee('23,80 €')
             ->assertSee('Mehrwertsteuer')
             ->assertSee('Bruttosumme');
+    }
+
+    public function test_checkout_validation_rejects_end_date_before_start_date(): void
+    {
+        $product = Product::factory()->create();
+
+        $this->withSession([
+            'inquiry_list.items' => [
+                [
+                    'key' => $product->id.'|',
+                    'product_id' => $product->id,
+                    'feature_value' => '',
+                    'quantity' => 1,
+                ],
+            ],
+        ]);
+
+        Livewire::test('public.inquiry-checkout')
+            ->set('salutation', 'Herr')
+            ->set('first_name', 'Max')
+            ->set('last_name', 'Mustermann')
+            ->set('email', 'max@example.com')
+            ->set('street', 'Musterstrasse 1')
+            ->set('postal_code', '04109')
+            ->set('city', 'Leipzig')
+            ->set('start_date', '2026-06-12')
+            ->set('end_date', '2026-06-10')
+            ->call('submit')
+            ->assertHasErrors([
+                'end_date' => ['after_or_equal'],
+            ]);
     }
 }

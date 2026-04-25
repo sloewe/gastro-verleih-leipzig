@@ -17,6 +17,9 @@ class InquiryFactory extends Factory
      */
     public function definition(): array
     {
+        $startDate = $this->faker->dateTimeBetween('+1 day', '+2 months');
+        $endDate = (clone $startDate)->modify('+'.$this->faker->numberBetween(1, 14).' days');
+
         return [
             'salutation' => $this->faker->randomElement(['Herr', 'Frau']),
             'first_name' => $this->faker->firstName(),
@@ -29,6 +32,8 @@ class InquiryFactory extends Factory
             'street' => $this->faker->streetAddress(),
             'postal_code' => $this->faker->postcode(),
             'city' => $this->faker->city(),
+            'start_date' => $startDate->format('Y-m-d'),
+            'end_date' => $endDate->format('Y-m-d'),
             'status' => $this->faker->randomElement(['new', 'in_progress', 'completed']),
         ];
     }

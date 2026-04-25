@@ -7,6 +7,7 @@ Bearbeitung und Verwaltung der eingegangenen Kundenanfragen.
 - Liste aller Anfragen (sortiert nach Datum absteigend).
 - Detailansicht einer Anfrage:
   - Anzeige aller Kundendaten.
+  - Anzeige des Anfragezeitraums (Start- und Enddatum).
   - Auflistung der angefragten Produkte inkl. gewählter Merkmale und Mengen.
 - Status-Management:
   - Bearbeiten des Status (z.B. Neu, In Bearbeitung, Angebot erstellt, Abgeschlossen, Storniert).
