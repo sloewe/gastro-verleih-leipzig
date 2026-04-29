@@ -161,7 +161,7 @@
 <footer class="public-footer">
     <div class="container public-footer__content">
         <p class="public-footer__copyright">
-            &copy; {{ date('Y') }} Gastro-Verleih Leipzig. {{ __('allRightsReserved') }}
+            &copy; {{ date('Y') }} GastroVerleih Leipzig. {{ __('allRightsReserved') }}
         </p>
 
         <div class="public-footer__links">

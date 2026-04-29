@@ -1,4 +1,4 @@
-# Design-Konzept: Gastro-Verleih Leipzig
+# Design-Konzept: GastroVerleih Leipzig
 
 Dieses Dokument beschreibt das visuelle Konzept für die Anwendung, basierend auf einem "Apple-Like" Stil und den Farben des Logos.
 
@@ -11,7 +11,7 @@ Der Stil orientiert sich an der Design-Philosophie von Apple: **Minimalismus, Kl
 *   **Hochwertige Typografie:** Klare, serifenlose Schriften mit optimierten Zeilenabständen.
 
 ## 2. Farbpalette
-Basierend auf dem Logo ("Gastro-Verleih Leipzig") wird eine helle, naturverbundene Farbwelt geschaffen.
+Basierend auf dem Logo ("GastroVerleih Leipzig") wird eine helle, naturverbundene Farbwelt geschaffen.
 
 | Farbe | Hex-Code (Vorschlag) | Verwendung |
 | :--- | :--- | :--- |
