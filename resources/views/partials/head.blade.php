@@ -2,7 +2,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
 <title>
-    {{ filled($title ?? null) ? $title.' - '.config('app.name', 'Gastro-Verleih-Leipzig') : config('app.name', 'astro-Verleih-Leipzig') }}
+    {{ filled($title ?? null) ? $title.' - '.config('app.name', 'GastroVerleih-Leipzig') : config('app.name', 'astro-Verleih-Leipzig') }}
 </title>
 @stack('meta')
 

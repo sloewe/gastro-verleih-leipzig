@@ -52,8 +52,8 @@
 <header class="public-header bg-white/95">
     <div class="container public-header__container">
         <a href="{{ route('home') }}" class="public-header__brand-link">
-            <img src="{{ asset('Logo_gastro-Verleih.png') }}" alt="Gastro-Verleih-Leipzig Logo" class="size-12 object-contain" />
-            <span class="public-header__brand-title">Gastro-Verleih Leipzig</span>
+            <img src="{{ asset('Logo_gastro-Verleih.png') }}" alt="GastroVerleih-Leipzig Logo" class="size-12 object-contain" />
+            <span class="public-header__brand-title">GastroVerleih Leipzig</span>
         </a>
 
         <nav class="public-header__desktop-nav" aria-label="{{ __('mainNavigation') }}">
