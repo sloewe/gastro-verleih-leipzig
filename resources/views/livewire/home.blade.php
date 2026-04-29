@@ -1,12 +1,15 @@
 
 <div class="space-y-12">
     <section class="text-center space-y-5 pt-8 md:pt-12">
-        <flux:heading size="2xl" level="1" class="text-gtc-green tracking-tight font-bold !text-4xl md:!text-5xl lg:!text-6xl">
+        <h1 class="text-gtc-green tracking-tight font-bold text-4xl md:!text-5xl lg:text-6xl">
             {{ __('discoverOurAssortment') }}
-        </flux:heading>
-        <flux:subheading size="lg" class="max-w-3xl mx-auto text-base md:text-lg text-gtc-ink/85">
+        </h1>
+        <h2 class="max-w-3xl mx-auto text-2xl lg:text-3xl text-gtc-ink/85">
+            {{ __('discoverOurAssortmentSub') }}
+        </h2>
+        <p class="max-w-3xl mx-auto text-base md:text-lg text-gtc-ink/85">
             {{ __('highQualityEquipmentForYourEventInLeipzigAndTheSurroundingAreaEasyRentalRelaxedCelebration') }}
-        </flux:subheading>
+        </p>
     </section>
 
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-8">
