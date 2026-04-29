@@ -11,6 +11,16 @@
         fn () => App\Models\Category::query()->orderBy('name')->get()
     )
 )
+@if (! $navigationCategories instanceof Illuminate\Support\Collection)
+    @php(Illuminate\Support\Facades\Cache::forget('navigation.categories'))
+    @php(
+        $navigationCategories = Illuminate\Support\Facades\Cache::remember(
+            'navigation.categories',
+            now()->addDay(),
+            fn () => App\Models\Category::query()->orderBy('name')->get()
+        )
+    )
+@endif
 @php(
     $navigationPages = Illuminate\Support\Facades\Cache::remember(
         'navigation.pages',
@@ -21,6 +31,21 @@
             ->get()
     )
 )
+@if (! $navigationPages instanceof Illuminate\Support\Collection)
+    @php(Illuminate\Support\Facades\Cache::forget('navigation.pages'))
+    @php(
+        $navigationPages = Illuminate\Support\Facades\Cache::remember(
+            'navigation.pages',
+            now()->addDay(),
+            fn () => App\Models\Page::query()
+                ->where('show_in_navigation', true)
+                ->orderBy('navigation_label')
+                ->get()
+        )
+    )
+@endif
+@php($navigationCategories = $navigationCategories->filter(fn ($category) => $category instanceof App\Models\Category)->values())
+@php($navigationPages = $navigationPages->filter(fn ($page) => $page instanceof App\Models\Page)->values())
 @php($currentCategoryParameter = request()->route('category'))
 @php($currentCategorySlug = is_object($currentCategoryParameter) ? ($currentCategoryParameter->slug ?? null) : $currentCategoryParameter)
 
@@ -78,7 +103,7 @@
         </nav>
 
         <nav class="public-header__mobile-nav md:hidden" aria-label="{{ __('Mobile Navigation') }}">
-            <details class="public-header__mobile-dropdown">
+            <details data-public-mobile-menu class="public-header__mobile-dropdown">
                 <summary class="public-header__nav-item">
                     {{ __('menu') }}
                 </summary>
@@ -168,20 +193,25 @@
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         const productsDropdown = document.querySelector('[data-public-products-dropdown]');
-
-        if (!productsDropdown) {
-            return;
-        }
+        const mobileMenuDropdown = document.querySelector('[data-public-mobile-menu]');
 
         document.addEventListener('click', (event) => {
-            if (productsDropdown.open && !productsDropdown.contains(event.target)) {
+            if (productsDropdown?.open && !productsDropdown.contains(event.target)) {
                 productsDropdown.open = false;
+            }
+
+            if (mobileMenuDropdown?.open && !mobileMenuDropdown.contains(event.target)) {
+                mobileMenuDropdown.open = false;
             }
         });
 
         document.addEventListener('keydown', (event) => {
-            if (event.key === 'Escape' && productsDropdown.open) {
+            if (event.key === 'Escape' && productsDropdown?.open) {
                 productsDropdown.open = false;
+            }
+
+            if (event.key === 'Escape' && mobileMenuDropdown?.open) {
+                mobileMenuDropdown.open = false;
             }
         });
     });

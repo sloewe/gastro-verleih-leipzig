@@ -1,15 +1,15 @@
 
 <div class="space-y-12">
-    <section class="text-center space-y-4">
-        <flux:heading size="2xl" level="1" class="text-gtc-green tracking-tight font-bold">
+    <section class="text-center space-y-5 pt-8 md:pt-12">
+        <flux:heading size="2xl" level="1" class="text-gtc-green tracking-tight font-bold !text-4xl md:!text-5xl lg:!text-6xl">
             {{ __('discoverOurAssortment') }}
         </flux:heading>
-        <flux:subheading size="lg" class="max-w-2xl mx-auto text-gtc-muted">
+        <flux:subheading size="lg" class="max-w-3xl mx-auto text-base md:text-lg text-gtc-ink/85">
             {{ __('highQualityEquipmentForYourEventInLeipzigAndTheSurroundingAreaEasyRentalRelaxedCelebration') }}
         </flux:subheading>
     </section>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-8">
         @foreach ($categories as $category)
             <a href="{{ route('category.show', $category->slug) }}" class="group relative overflow-hidden rounded-apple bg-white shadow-sm transition-all duration-300 hover:shadow-md hover:scale-[1.02]">
                 <div class="aspect-4/3 w-full overflow-hidden">

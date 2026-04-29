@@ -4,6 +4,6 @@
     }
 
     .public-main {
-        @apply h-full py-12;
+        @apply h-full bg-linear-to-b from-slate-200/70 to-gtc-light py-12;
     }
 }

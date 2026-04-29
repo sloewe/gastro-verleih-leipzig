@@ -24,7 +24,7 @@ class HomeTest extends TestCase
     {
         $this->get(route('home'))
             ->assertStatus(200)
-            ->assertSee('Entdecke unser Sortiment');
+            ->assertSee(__('discoverOurAssortment'));
     }
 
     public function test_home_page_shows_categories()
@@ -32,7 +32,8 @@ class HomeTest extends TestCase
         $category = Category::factory()->create(['name' => 'Kaffeevollautomaten']);
 
         Livewire::test('home')
-            ->assertSee('Kaffeevollautomaten');
+            ->assertSee('Kaffeevollautomaten')
+            ->assertSee('grid grid-cols-1 sm:grid-cols-3 gap-8');
     }
 
     public function test_home_page_uses_high_contrast_header_navigation_styles()
@@ -91,5 +92,24 @@ class HomeTest extends TestCase
 
         $this->assertTrue(Cache::has('navigation.categories'));
         $this->assertTrue(Cache::has('navigation.pages'));
+    }
+
+    public function test_home_page_recovers_from_invalid_navigation_cache_payloads(): void
+    {
+        Category::factory()->create(['name' => 'Kuehlung', 'slug' => 'kuehlung']);
+        Page::query()->create([
+            'title' => 'Impressum',
+            'slug' => 'impressum',
+            'show_in_navigation' => true,
+            'navigation_label' => 'Impressum',
+        ]);
+
+        Cache::put('navigation.categories', '');
+        Cache::put('navigation.pages', false);
+
+        $this->get(route('home'))
+            ->assertOk()
+            ->assertSee('Kuehlung')
+            ->assertSee('Impressum');
     }
 }
