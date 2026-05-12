@@ -48,6 +48,8 @@
 @php($navigationPages = $navigationPages->filter(fn ($page) => $page instanceof App\Models\Page)->values())
 @php($currentCategoryParameter = request()->route('category'))
 @php($currentCategorySlug = is_object($currentCategoryParameter) ? ($currentCategoryParameter->slug ?? null) : $currentCategoryParameter)
+@php($cookieConsentDurationDays = max(1, (int) config('features.cookie_consent_duration_days', 60)))
+@php($cookieConsentMaxAge = $cookieConsentDurationDays * 86400)
 @php($hasCookieConsent = request()->cookie('gvl_cookie_consent') === 'accepted')
 
 <header class="public-header bg-white/95">
@@ -186,7 +188,7 @@
 </footer>
 
 @unless ($hasCookieConsent)
-    <x-public-cookie-banner />
+    <x-public-cookie-banner :cookie-consent-max-age="$cookieConsentMaxAge" />
 @endunless
 
 @persist('toast')
@@ -201,11 +203,12 @@
         const mobileMenuDropdown = document.querySelector('[data-public-mobile-menu]');
         const cookieConsentBanner = document.querySelector('[data-cookie-consent-banner]');
         const cookieConsentAcceptButton = document.querySelector('[data-cookie-consent-accept]');
+        const cookieConsentMaxAge = Math.max(1, Number(cookieConsentBanner?.dataset.cookieConsentMaxAge ?? 0));
 
         const acceptCookieConsent = () => {
             const secureAttribute = window.location.protocol === 'https:' ? '; Secure' : '';
 
-            document.cookie = `gvl_cookie_consent=accepted; path=/; max-age=31536000; SameSite=Lax${secureAttribute}`;
+            document.cookie = `gvl_cookie_consent=accepted; path=/; max-age=${cookieConsentMaxAge}; SameSite=Lax${secureAttribute}`;
             cookieConsentBanner?.remove();
         };
 

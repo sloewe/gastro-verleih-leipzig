@@ -1,5 +1,10 @@
+@props([
+    'cookieConsentMaxAge',
+])
+
 <div
     data-cookie-consent-banner
+    data-cookie-consent-max-age="{{ $cookieConsentMaxAge }}"
     role="region"
     aria-labelledby="cookie-consent-title"
     class="fixed inset-x-0 bottom-0 z-50 border-t border-black/10 bg-white/95 shadow-[0_-12px_32px_rgba(15,23,42,0.12)] backdrop-blur"

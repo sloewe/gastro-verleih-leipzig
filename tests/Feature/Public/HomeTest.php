@@ -60,13 +60,23 @@ class HomeTest extends TestCase
             ->assertSee(__('cookieBannerRequiredOnly'))
             ->assertSee(route('content.page', 'impressum'), false)
             ->assertSee(route('content.page', 'datenschutz'), false)
+            ->assertSee('data-cookie-consent-max-age="5184000"', false)
             ->assertSee('data-cookie-consent-accept', false)
             ->assertSee('container mx-auto flex flex-col gap-4 px-4 py-4 sm:px-6 sm:py-5 lg:flex-row lg:items-end lg:justify-between', false);
     }
 
+    public function test_home_page_uses_configured_cookie_consent_duration(): void
+    {
+        config(['features.cookie_consent_duration_days' => 7]);
+
+        $this->get(route('home'))
+            ->assertOk()
+            ->assertSee('data-cookie-consent-max-age="604800"', false);
+    }
+
     public function test_home_page_hides_cookie_banner_with_existing_consent_cookie(): void
     {
-        $this->withCookie('gvl_cookie_consent', 'accepted')
+        $this->withUnencryptedCookie('gvl_cookie_consent', 'accepted')
             ->get(route('home'))
             ->assertOk()
             ->assertDontSee(__('cookieBannerTitle'))
