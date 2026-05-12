@@ -39,7 +39,7 @@ class PagesTest extends TestCase
             ->set('show_in_navigation', true)
             ->set('navigation_label', 'Rechtliches')
             ->set('blocks', [
-                ['id' => null, 'type' => 'markdown', 'content_markdown' => '# Abschnitt 1'],
+                ['id' => null, 'type' => 'markdown', 'content_markdown' => '## Abschnitt 1'],
                 ['id' => null, 'type' => 'markdown', 'content_markdown' => 'Text für Abschnitt 2'],
             ])
             ->call('save')
@@ -58,7 +58,7 @@ class PagesTest extends TestCase
             'page_id' => $page->id,
             'sort_order' => 1,
             'type' => 'markdown',
-            'content_markdown' => '# Abschnitt 1',
+            'content_markdown' => '## Abschnitt 1',
         ]);
         $this->assertDatabaseHas('page_blocks', [
             'page_id' => $page->id,

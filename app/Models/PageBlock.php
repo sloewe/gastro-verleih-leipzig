@@ -31,7 +31,9 @@ class PageBlock extends Model
             return null;
         }
 
-        return preg_replace('/^(#{1,6})(\S)/m', '$1 $2', $markdown) ?? $markdown;
+        $markdown = preg_replace('/^(#{1,6})([a-zA-Z0-9])/m', '$1 $2', $markdown);
+
+        return $markdown;
     }
 
     /**
