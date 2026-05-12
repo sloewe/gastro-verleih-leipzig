@@ -4,7 +4,7 @@
     aria-labelledby="cookie-consent-title"
     class="fixed inset-x-0 bottom-0 z-50 border-t border-black/10 bg-white/95 shadow-[0_-12px_32px_rgba(15,23,42,0.12)] backdrop-blur"
 >
-    <div class="container flex flex-col gap-4 py-4 sm:py-5 lg:flex-row lg:items-end lg:justify-between">
+    <div class="container mx-auto flex flex-col gap-4 px-4 py-4 sm:px-6 sm:py-5 lg:flex-row lg:items-end lg:justify-between">
         <div class="max-w-3xl space-y-2 text-sm">
             <p id="cookie-consent-title" class="text-base font-semibold text-gtc-green">
                 {{ __('cookieBannerTitle') }}

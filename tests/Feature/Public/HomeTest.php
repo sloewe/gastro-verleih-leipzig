@@ -60,7 +60,8 @@ class HomeTest extends TestCase
             ->assertSee(__('cookieBannerRequiredOnly'))
             ->assertSee(route('content.page', 'impressum'), false)
             ->assertSee(route('content.page', 'datenschutz'), false)
-            ->assertSee('data-cookie-consent-accept', false);
+            ->assertSee('data-cookie-consent-accept', false)
+            ->assertSee('container mx-auto flex flex-col gap-4 px-4 py-4 sm:px-6 sm:py-5 lg:flex-row lg:items-end lg:justify-between', false);
     }
 
     public function test_home_page_hides_cookie_banner_with_existing_consent_cookie(): void
