@@ -48,6 +48,7 @@
 @php($navigationPages = $navigationPages->filter(fn ($page) => $page instanceof App\Models\Page)->values())
 @php($currentCategoryParameter = request()->route('category'))
 @php($currentCategorySlug = is_object($currentCategoryParameter) ? ($currentCategoryParameter->slug ?? null) : $currentCategoryParameter)
+@php($hasCookieConsent = request()->cookie('gvl_cookie_consent') === 'accepted')
 
 <header class="public-header bg-white/95">
     <div class="container public-header__container">
@@ -184,6 +185,10 @@
     </div>
 </footer>
 
+@unless ($hasCookieConsent)
+    <x-public-cookie-banner />
+@endunless
+
 @persist('toast')
 <flux:toast.group>
     <flux:toast/>
@@ -194,6 +199,15 @@
     document.addEventListener('DOMContentLoaded', () => {
         const productsDropdown = document.querySelector('[data-public-products-dropdown]');
         const mobileMenuDropdown = document.querySelector('[data-public-mobile-menu]');
+        const cookieConsentBanner = document.querySelector('[data-cookie-consent-banner]');
+        const cookieConsentAcceptButton = document.querySelector('[data-cookie-consent-accept]');
+
+        const acceptCookieConsent = () => {
+            const secureAttribute = window.location.protocol === 'https:' ? '; Secure' : '';
+
+            document.cookie = `gvl_cookie_consent=accepted; path=/; max-age=31536000; SameSite=Lax${secureAttribute}`;
+            cookieConsentBanner?.remove();
+        };
 
         document.addEventListener('click', (event) => {
             if (productsDropdown?.open && !productsDropdown.contains(event.target)) {
@@ -214,6 +228,8 @@
                 mobileMenuDropdown.open = false;
             }
         });
+
+        cookieConsentAcceptButton?.addEventListener('click', acceptCookieConsent);
     });
 </script>
 

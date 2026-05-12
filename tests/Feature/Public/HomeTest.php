@@ -52,6 +52,26 @@ class HomeTest extends TestCase
             ->assertSee('md:hidden');
     }
 
+    public function test_home_page_shows_cookie_banner_without_consent_cookie(): void
+    {
+        $this->get(route('home'))
+            ->assertOk()
+            ->assertSee(__('cookieBannerTitle'))
+            ->assertSee(__('cookieBannerRequiredOnly'))
+            ->assertSee(route('content.page', 'impressum'), false)
+            ->assertSee(route('content.page', 'datenschutz'), false)
+            ->assertSee('data-cookie-consent-accept', false);
+    }
+
+    public function test_home_page_hides_cookie_banner_with_existing_consent_cookie(): void
+    {
+        $this->withCookie('gvl_cookie_consent', 'accepted')
+            ->get(route('home'))
+            ->assertOk()
+            ->assertDontSee(__('cookieBannerTitle'))
+            ->assertDontSee(__('cookieBannerDescription'));
+    }
+
     public function test_home_page_moves_login_link_to_footer(): void
     {
         $response = $this->get(route('home'));
@@ -72,7 +92,8 @@ class HomeTest extends TestCase
         $this->get(route('home'))
             ->assertStatus(200)
             ->assertSee('data-public-products-dropdown', false)
-            ->assertSee('productsDropdown.open = false;', false);
+            ->assertSee('productsDropdown.open = false;', false)
+            ->assertSee('gvl_cookie_consent=accepted', false);
     }
 
     public function test_home_page_populates_navigation_cache_entries(): void
