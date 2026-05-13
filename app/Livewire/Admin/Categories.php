@@ -3,6 +3,7 @@
 namespace App\Livewire\Admin;
 
 use App\Models\Category;
+use App\Services\StoreUploadedImageAsJpeg;
 use Flux\Flux;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -69,7 +70,13 @@ class Categories extends Component
             if ($this->editing && $this->category->image_path) {
                 Storage::disk('public')->delete($this->category->image_path);
             }
-            $data['image_path'] = $this->image->store('categories', 'public');
+            $data['image_path'] = app(StoreUploadedImageAsJpeg::class)->store(
+                $this->image,
+                'public',
+                'categories',
+                (int) config('images.categories.max_width'),
+                (int) config('images.categories.max_height'),
+            );
         }
 
         if ($this->editing) {

@@ -59,7 +59,35 @@ class ProductsTest extends TestCase
         $this->assertEquals(['key1', 'key2'], $product->keywords);
         $this->assertEquals(['Rot', 'Blau'], $product->feature_values);
         $this->assertNotNull($product->image_path);
+        $this->assertStringEndsWith('.jpg', $product->image_path);
         Storage::disk('public')->assertExists($product->image_path);
+        $storedImage = Storage::disk('public')->get($product->image_path);
+        $info = getimagesizefromstring($storedImage);
+        $this->assertNotFalse($info);
+        $this->assertSame(IMAGETYPE_JPEG, $info[2]);
+    }
+
+    public function test_large_product_upload_is_scaled_down_to_configured_maximum(): void
+    {
+        Storage::fake('public');
+        $category = Category::factory()->create();
+        $png = UploadedFile::fake()->image('large.png', 3000, 1500);
+
+        Livewire::test('admin.products')
+            ->set('category_id', $category->id)
+            ->set('name', 'Großes Bild')
+            ->set('price', 10)
+            ->set('vat_rate', 19)
+            ->set('image', $png)
+            ->call('save')
+            ->assertHasNoErrors();
+
+        $product = Product::where('name', 'Großes Bild')->first();
+        $this->assertNotNull($product);
+        $info = getimagesizefromstring(Storage::disk('public')->get($product->image_path));
+        $this->assertNotFalse($info);
+        $this->assertSame(1400, $info[0]);
+        $this->assertSame(700, $info[1]);
     }
 
     public function test_can_update_product()
@@ -204,5 +232,26 @@ class ProductsTest extends TestCase
             ->assertSee(route('admin.inquiries', ['inquiry' => $oldInquiry->id]))
             ->assertSee('Ben Neu')
             ->assertSee('Anna Alt');
+    }
+
+    public function test_can_sort_products_by_name(): void
+    {
+        $category = Category::factory()->create();
+
+        Product::factory()->create([
+            'category_id' => $category->id,
+            'name' => 'Zulu Produkt',
+        ]);
+
+        Product::factory()->create([
+            'category_id' => $category->id,
+            'name' => 'Alpha Produkt',
+        ]);
+
+        Livewire::test('admin.products')
+            ->call('sortBy', 'name')
+            ->assertSeeInOrder(['Zulu Produkt', 'Alpha Produkt'])
+            ->call('sortBy', 'name')
+            ->assertSeeInOrder(['Alpha Produkt', 'Zulu Produkt']);
     }
 }

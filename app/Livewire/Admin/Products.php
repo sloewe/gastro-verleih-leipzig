@@ -5,6 +5,7 @@ namespace App\Livewire\Admin;
 use App\Models\Category;
 use App\Models\InquiryItem;
 use App\Models\Product;
+use App\Services\StoreUploadedImageAsJpeg;
 use Flux\Flux;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -22,6 +23,10 @@ class Products extends Component
     public $search = '';
 
     public $categoryFilter = '';
+
+    public string $sortField = 'created_at';
+
+    public string $sortDirection = 'desc';
 
     public ?Product $product = null;
 
@@ -59,6 +64,40 @@ class Products extends Component
      * }>
      */
     public array $productInquiries = [];
+
+    /**
+     * @var list<string>
+     */
+    private const SORTABLE_FIELDS = [
+        'name',
+        'created_at',
+    ];
+
+    public function updatingSearch(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatingCategoryFilter(): void
+    {
+        $this->resetPage();
+    }
+
+    public function sortBy(string $field): void
+    {
+        if (! in_array($field, self::SORTABLE_FIELDS, true)) {
+            return;
+        }
+
+        if ($this->sortField === $field) {
+            $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc';
+        } else {
+            $this->sortField = $field;
+            $this->sortDirection = 'desc';
+        }
+
+        $this->resetPage();
+    }
 
     public function updatedName($value)
     {
@@ -129,7 +168,13 @@ class Products extends Component
             if ($this->editing && $this->product->image_path && ! $this->product->inquiries()->exists()) {
                 Storage::disk('public')->delete($this->product->image_path);
             }
-            $data['image_path'] = $this->image->store('products', 'public');
+            $data['image_path'] = app(StoreUploadedImageAsJpeg::class)->store(
+                $this->image,
+                'public',
+                'products',
+                (int) config('images.products.max_width'),
+                (int) config('images.products.max_height'),
+            );
         }
 
         if ($this->editing) {
@@ -225,7 +270,7 @@ class Products extends Component
                 ->with('category')
                 ->when($this->search, fn ($query) => $query->where('name', 'like', '%'.$this->search.'%'))
                 ->when($this->categoryFilter, fn ($query) => $query->where('category_id', $this->categoryFilter))
-                ->latest()
+                ->orderBy($this->sortField, $this->sortDirection)
                 ->paginate(10),
         ]);
     }

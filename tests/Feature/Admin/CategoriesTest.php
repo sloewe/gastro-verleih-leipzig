@@ -7,7 +7,9 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Livewire;
 use Tests\TestCase;
 
@@ -157,5 +159,29 @@ class CategoriesTest extends TestCase
 
         $this->assertFalse(Cache::has('navigation.categories'));
         $this->assertFalse(Cache::has('navigation.pages'));
+    }
+
+    public function test_category_image_upload_is_stored_as_jpeg_within_max_dimensions(): void
+    {
+        Storage::fake('public');
+        $png = UploadedFile::fake()->image('category.png', 2000, 1000);
+
+        Livewire::actingAs($this->user)
+            ->test(Categories::class)
+            ->set('name', 'Mit Bild')
+            ->set('slug', 'mit-bild')
+            ->set('image', $png)
+            ->call('save')
+            ->assertHasNoErrors();
+
+        $category = Category::where('slug', 'mit-bild')->first();
+        $this->assertNotNull($category);
+        $this->assertStringEndsWith('.jpg', $category->image_path ?? '');
+        Storage::disk('public')->assertExists($category->image_path);
+        $info = getimagesizefromstring(Storage::disk('public')->get($category->image_path));
+        $this->assertNotFalse($info);
+        $this->assertSame(IMAGETYPE_JPEG, $info[2]);
+        $this->assertSame(900, $info[0]);
+        $this->assertSame(450, $info[1]);
     }
 }
