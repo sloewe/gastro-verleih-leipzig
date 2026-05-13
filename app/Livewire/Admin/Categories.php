@@ -17,6 +17,10 @@ class Categories extends Component
 
     public $search = '';
 
+    public string $sortField = 'created_at';
+
+    public string $sortDirection = 'desc';
+
     public ?Category $category = null;
 
     public $name = '';
@@ -26,6 +30,28 @@ class Categories extends Component
     public $image = null;
 
     public $editing = false;
+
+    /**
+     * @var list<string>
+     */
+    private const SORTABLE_FIELDS = [
+        'name',
+        'created_at',
+    ];
+
+    public function sortBy(string $field): void
+    {
+        if (! in_array($field, self::SORTABLE_FIELDS, true)) {
+            return;
+        }
+
+        if ($this->sortField === $field) {
+            $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc';
+        } else {
+            $this->sortField = $field;
+            $this->sortDirection = 'desc';
+        }
+    }
 
     public function updatedName($value)
     {
@@ -123,7 +149,7 @@ class Categories extends Component
     {
         return Category::query()
             ->when($this->search, fn ($query) => $query->where('name', 'like', '%'.$this->search.'%'))
-            ->latest()
+            ->orderBy($this->sortField, $this->sortDirection)
             ->get();
     }
 

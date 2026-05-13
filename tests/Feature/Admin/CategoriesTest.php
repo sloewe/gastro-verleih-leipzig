@@ -184,4 +184,24 @@ class CategoriesTest extends TestCase
         $this->assertSame(900, $info[0]);
         $this->assertSame(450, $info[1]);
     }
+
+    public function test_can_sort_categories_by_name(): void
+    {
+        Category::factory()->create([
+            'name' => 'Zulu Kategorie',
+            'slug' => 'zulu-kategorie',
+        ]);
+
+        Category::factory()->create([
+            'name' => 'Alpha Kategorie',
+            'slug' => 'alpha-kategorie',
+        ]);
+
+        Livewire::actingAs($this->user)
+            ->test(Categories::class)
+            ->call('sortBy', 'name')
+            ->assertSeeInOrder(['Zulu Kategorie', 'Alpha Kategorie'])
+            ->call('sortBy', 'name')
+            ->assertSeeInOrder(['Alpha Kategorie', 'Zulu Kategorie']);
+    }
 }

@@ -12,6 +12,10 @@ class Users extends Component
 {
     public $search = '';
 
+    public string $sortField = 'created_at';
+
+    public string $sortDirection = 'desc';
+
     public ?User $user = null;
 
     public $name = '';
@@ -21,6 +25,28 @@ class Users extends Component
     public $password = '';
 
     public $editing = false;
+
+    /**
+     * @var list<string>
+     */
+    private const SORTABLE_FIELDS = [
+        'name',
+        'created_at',
+    ];
+
+    public function sortBy(string $field): void
+    {
+        if (! in_array($field, self::SORTABLE_FIELDS, true)) {
+            return;
+        }
+
+        if ($this->sortField === $field) {
+            $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc';
+        } else {
+            $this->sortField = $field;
+            $this->sortDirection = 'desc';
+        }
+    }
 
     public function create()
     {
@@ -96,7 +122,7 @@ class Users extends Component
         return User::query()
             ->when($this->search, fn ($query) => $query->where('name', 'like', '%'.$this->search.'%')
                 ->orWhere('email', 'like', '%'.$this->search.'%'))
-            ->latest()
+            ->orderBy($this->sortField, $this->sortDirection)
             ->get();
     }
 

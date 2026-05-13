@@ -80,4 +80,26 @@ class UsersTest extends TestCase
         $this->get(route('admin.users'))
             ->assertRedirect(route('login'));
     }
+
+    public function test_admin_can_sort_users_by_name(): void
+    {
+        $admin = User::factory()->create();
+
+        User::factory()->create([
+            'name' => 'Zulu User',
+            'email' => 'zulu@example.com',
+        ]);
+
+        User::factory()->create([
+            'name' => 'Alpha User',
+            'email' => 'alpha@example.com',
+        ]);
+
+        Livewire::actingAs($admin)
+            ->test(Users::class)
+            ->call('sortBy', 'name')
+            ->assertSeeInOrder(['Zulu User', 'Alpha User'])
+            ->call('sortBy', 'name')
+            ->assertSeeInOrder(['Alpha User', 'Zulu User']);
+    }
 }
